@@ -18,6 +18,24 @@ def login_required(f):
     return decorated_function
 
 
+def new_api_test():
+    """function for new api"""
+    try:
+        response = requests.get(
+            f"https://f1connectapi.vercel.app/api/current/last", timeout=120
+        )
+        if response.status_code == 200:
+            print("successfully fetched the data")
+        else:
+            print(f"fastest: there's a {response.status_code} error with your request")
+        data = response.json()
+        return data
+
+    except (requests.RequestException, ValueError, KeyError, IndexError):
+        print(f"fastest: there's a {response.status_code} error with your request")
+        return None
+
+
 def picture(wiki_search_title):
     """MediaWiki API for returning main page image of an article - 
     used in conjuction with URL received from ergast API"""
@@ -41,7 +59,7 @@ def picture(wiki_search_title):
 
 def track_pic(track):
     """function for getting track pictures using the picture function defined above"""
-    wiki_url = track["Circuit"]["url"]
+    wiki_url = track['race'][0]['url']
     # splits out page title from wiki page for API search
     wiki_search_title = wiki_url.split("/")[-1]
     # uses title for API function search tp pull picture
@@ -49,7 +67,7 @@ def track_pic(track):
     if url:
         urllib.request.urlretrieve(
             url,
-            f'./static/track_pics/{track["Circuit"]["circuitName"]}.jpg',
+            f'./static/track_pics/{track["race"][0]["circuit"]["circuitName"]}.jpg',
         )
 
 
@@ -215,7 +233,7 @@ def next_race(number):
     (increments e.g 1 is next, 2 is the second race from now etc)"""
     try:
         response = requests.get(
-            "http://ergast.com/api/f1/current/last/results.json?limit=500", timeout=120
+            "https://f1connectapi.vercel.app/api/current/last", timeout=120
         )
         if response.status_code == 200:
             print("successfully fetched the data")
@@ -225,16 +243,17 @@ def next_race(number):
             )
 
         data = response.json()
-        current_round = int((data)["MRData"]["RaceTable"]["round"])
+        current_year = data["season"]
+        current_round = int((data)["round"])
         if current_round >= 22:
             return False  # return false at end of season for app.py to use
         next_round = current_round + number  # takes the last race round and adds 1
         response2 = requests.get(
-            f"http://ergast.com/api/f1/current/{next_round}.json?limit=500", timeout=120
+            f"https://f1connectapi.vercel.app/api/{current_year}/{next_round}", timeout=120
         )
         if response2.status_code == 200:
             data1 = response2.json()
-            return (data1)["MRData"]["RaceTable"]["Races"][0]
+            return data1
 
     except (requests.RequestException, ValueError, KeyError, IndexError):
         print(f"next_race: there's a {response.status_code} error with your request")

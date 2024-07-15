@@ -27,6 +27,7 @@ from helpers import (
     track_pic,
     qualifying,
     qualifying_default,
+    new_api_test,
 )
 
 # Configure application
@@ -81,43 +82,46 @@ def index():
     username = (
         db.execute("SELECT username FROM users WHERE id = ?", session["user_id"])
     )[0]["username"]
-    last_race = previous_race()  # variable for the most recent completed race
+
+    last_race = new_api_test()  # variable for the most recent completed race
+    print(f"LAST RACE URL = {last_race}")
     #idented the below to check for last_race being built
     if last_race:
         global current_season
         current_season = last_race["season"]
     next = next_race(1)
+    print(f'NEXT RACE ==== {next}')
     next_plus_one = next_race(2)
 
     # calling wiki picture api functions for each track if not already exists
     # checks if there is a last race returned by the API
     if last_race is not None and last_race is not False:
         if not os.path.isfile(
-            f'./static/track_pics/{last_race["Circuit"]["circuitName"]}.jpg'
+            f'./static/track_pics/{last_race["race"][0]["circuit"]["circuitName"]}.jpg'
         ):
             track_pic(last_race)
 
     # checks if next race returned by the API (for end of season)
     if next is not None and next is not False:
         if not os.path.isfile(
-            f'./static/track_pics/{next["Circuit"]["circuitName"]}.jpg'
+            f'./static/track_pics/{next["race"][0]["circuit"]["circuitName"]}.jpg'
         ):
             track_pic(next)
 
     # checks if next plus one race returned by the API (for end of season)
     if next_plus_one is not None and next_plus_one is not False:
         if not os.path.isfile(
-            f'./static/track_pics/{next_plus_one["Circuit"]["circuitName"]}.jpg'
+            f'./static/track_pics/{next_plus_one["race"][0]["circuit"]["circuitName"]}.jpg'
         ):
             track_pic(next_plus_one)
 
     # dict of teams in currrent year - preloads so wait time isn't  long on /drivers route
-    if not teams_dict:
-        global teams  # global can be used by render template once self and teams_dict already made
-        teams = teams_lookup()
-        for team in teams:
-            name = team["constructorId"]
-            teams_dict[name] = team
+    #if not teams_dict:
+        #global teams  # global can be used by render template once self and teams_dict already made
+        #teams = teams_lookup()
+        #for team in teams:
+            #name = team["constructorId"]
+            #teams_dict[name] = team
 
     return render_template(
         "index.html",
