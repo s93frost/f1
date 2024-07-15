@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Teams
+{% endblock %}
+
+{% block main %}
+
+    <div class="card text-muted mb-3">
+        <div class="card-header">
+            <h4 class="page_header"> Formula 1 Teams {{ current_season }}</h4>
+        </div>
+        <div class="card-body">
+            See below for list and details of all teams in the current season
+        </div>
+    </div>
+
+    <br>
+
+    <div class="row gx-4 gx-lg-4 row-cols-2 row-cols-md-3 row-cols-xl-3 justify-content-center">
+
+        {% for x in team_standing %}
+            <div class="col mb-5">
+                <div class="card bg-light mb-3">
+                    <div class="constructor_header" id="{{ x.Constructor.name.replace(' ','') }}">
+                        <h4> {{ x.position }} </h4>
+                        <h5>
+                            <p class="card-text"> {{ x.points }} Pts</p>
+                        </h5>
+                    </div>
+                    <div class="card-body" id="team-card">
+                        <h5 class="constructor" id="{{ x.Constructor.name.replace(' ','') }}"> {{ x.Constructor.name }} </h5>
+                        <p class="card-text"> Nationality: {{ x.Constructor.nationality}} </p>
+                        <p class="card-text"> Wins: {{ x.wins }} </p>
+                        <div style="height: 130px;">
+                            <img class="team_logo" src="/static/team_pics/{{x.Constructor.constructorId}}.jpg" alt="{{x.Constructor.constructorId}}" style="height:100px; width: auto">
+                        </div>
+                        <div>
+                            <a href="{{x.Constructor.url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> More team info from Wikipedia </a>
+                        </div>
+                    </div>
+
+                    <div class="constructor_header" id="{{ x.Constructor.name.replace(' ','') }}">
+                        {% for x in drivers_and_teams[x.Constructor.constructorId] %}
+                            <h5> {{ drivers_dict[x].givenName }} <br> {{ drivers_dict[x].familyName }} </h5>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+
+{% endblock %}

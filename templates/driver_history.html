@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Driver History
+{% endblock %}
+
+{% block main %}
+
+    <script>
+    // this is the javascript for creating the conditional dropdowns
+    // passes in names dictionary for lists of teams and drivers within
+        var subjectObject = {{ names_dict|safe }}
+        window.onload = function() {
+            var team = document.getElementById("constructor_name");
+            var driver = document.getElementById("driver_name");
+            for (var x in subjectObject) {
+                team.options[team.options.length] = new Option(x, x);
+            }
+            team.onchange = function() {
+            //empty driver dropdown
+                driver.length = 1;
+            //display correct values
+                var z = subjectObject[this.value];
+                for (var i = 0; i < z.length; i++) {
+                    driver.options[driver.options.length] = new Option(z[i], z[i]);
+                }
+            }
+        }
+    </script>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <h4 class="page_header"> {{ current_season }} Drivers: Seasons with Constructor </h4>
+        </div>
+        <div class="card-body">
+            <p> Please select a driver below from the current season </p>
+            <p> The table below shows all the seasons they've raced for that constructor </p>
+        </div>
+        <div class="card-footer">
+            <form action="/driver_history" method="post">
+                <div class="row justify-content-center">
+                    <div class="col-auto">
+                        <select class="btn btn-warning" required name="constructor_name" id="constructor_name">
+                            <option disabled selected>Constructor</option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <select class="btn btn-warning" required name="driver_name" id="driver_name">
+                            <option disabled selected>Driver</option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+
+    <br>
+    <div class="table-responsive">
+        <table class="table table-sm table-primary table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Driver</th>
+                    <th>Constructor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td> {{ drivers_name }} </td>
+                    <td> {{ constructor_name }} </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <br>
+
+    <div class="table-responsive">
+        <table class="table table-sm table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Season</th>
+                    <th>Season info</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for x in seasons %}
+                    <tr>
+                        <td> {{ x.season }} </td>
+                        <td> <a href="{{ x.url }}" target="_blank" rel="noopener noreferrer">{{ x.url }}</a> </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

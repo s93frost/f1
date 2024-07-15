@@ -1,0 +1,254 @@
+/* Size for brand */
+nav .navbar-brand {
+    font-size: xx-large;
+}
+
+.navbar-toggle .icon-bar {
+    background-color: black;
+}
+
+/* Colors for brand */
+.blue {
+    color: #537fbe;
+}
+
+.red {
+    color: #ea433b;
+}
+
+.yellow {
+    color: #f5b82e;
+}
+
+.green {
+    color: #2e944b;
+}
+
+th {
+    background-color: #0d6efd;
+    width: 10%;
+    border: 1px solid;
+    text-align: center;
+    color: white;
+}
+
+table {
+    width: 100%;
+    text-align: center;
+    border: 1px solid;
+    color: white;
+}
+
+tfoot {
+    background-color: grey;
+    color: white;
+}
+
+td {
+    width: 10%;
+    border: 1px solid;
+    color: white;
+}
+
+
+h2 {
+    color: white;
+    display: flex;
+    justify-content: center;
+}
+
+body {
+    background-color: #3A4345;
+    color: white;
+}
+
+#block {
+    border-style: solid;
+    border-color: red;
+    border-top-right-radius: 20px
+}
+
+.gap {
+    padding: 5px;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-right: 100px;
+    margin-left: 100px;
+}
+
+.wrapper_team {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    margin-right: 100px;
+    margin-left: 100px;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: center
+}
+
+
+#team-card:hover {
+    background-color: black;
+    color: white;
+}
+
+#team-card:hover .team_logo {
+    background-color: white;
+    color: black;
+}
+
+
+.next_race {
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.text-success:hover {
+    background-color: white;
+}
+
+.text-warning:hover {
+    background-color: white;
+}
+
+.text-info:hover {
+    background-color: white;
+}
+
+.page_header {
+    background-color: #FF1801;
+    border-radius: 7px;
+    color: white;
+    padding: 20px;
+}
+
+.center-cropped {
+    width: 100px;
+    height: 100px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.logo {
+    width: 30%;
+    height: auto;
+    padding: 5px;
+}
+
+.team_logo {
+    width: auto;
+    height: 35px;
+    padding: 5px;
+}
+
+.index_logo {
+    width: 60%;
+    height: auto;
+    padding: 5px;
+}
+
+.driver_logo {
+    width: auto;
+    height: 150px;
+    padding: 5px;
+}
+
+tr:hover,
+td:hover {
+    background-color: coral !important;
+}
+
+.driver_header {
+    border-radius: 3px;
+    padding: 5px;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 25px;
+}
+
+.constructor {
+    border-radius: 3px;
+    padding: 5px;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 25px;
+}
+
+.constructor_header {
+    border-radius: 3px;
+    padding: 5px;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 25px;
+    display: flex;
+    justify-content: space-between;
+}
+
+#Ferrari {
+    background-color: #EF1A2D;
+    color: white;
+}
+
+#RedBull {
+    background-color: #23326A;
+    color: white;
+}
+
+#McLaren {
+    background-color: #FF8000;
+    color: white;
+}
+
+#Mercedes {
+    background-color: #00A19B;
+    color: white;
+}
+
+#AstonMartin {
+    background-color: #00352f;
+    color: white;
+}
+
+#AlpineF1Team {
+    background-color: #02192B;
+    color: white;
+}
+
+#Williams {
+    background-color: #00A0DE;
+    color: white;
+}
+
+#HaasF1Team {
+    background-color: #E6002B;
+    color: white;
+}
+
+#AlfaRomeo {
+    background-color: #A42134;
+    color: white;
+}
+
+#AlphaTauri {
+    background-color: #20394C;
+    color: white;
+}
+
+#Sauber {
+    background-color: #3bff6f;
+    color: black;
+}
+
+#RBF1Team {
+    background-color: #2b7cff;
+    color: white;
+}

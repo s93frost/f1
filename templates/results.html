@@ -1,0 +1,205 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Results
+{% endblock %}
+
+{% block main %}
+
+    <script type="text/javascript">
+    // this is for creating the drop down lists from the seasons and racenames variable returned by the API
+    // dependant on which year and races there are
+        var subjectObject = {{ seasons_and_names|safe }}
+        window.onload = function() {
+            var year = document.getElementById("year");
+            var racename = document.getElementById("racename");
+            for (var x in subjectObject) {
+                year.options[year.options.length] = new Option(x, x);
+            }
+            year.onchange = function() {
+            //empty driver dropdown
+                racename.length = 1;
+            //display correct values
+                var z = subjectObject[this.value];
+                for (var i = 0; i < z.length; i++) {
+                    racename.options[racename.options.length] = new Option(z[i], z[i]);
+                }
+            }
+        }
+    </script>
+
+    <div class="card text-muted mb-3">
+        <div class="card-header">
+            <h4 class="page_header"> Formula 1 Results (1975 - present) </h4>
+            <form action="/results" method="post">
+                <div class="row justify-content-center">
+                    <div class="col-auto">
+                        <select class="btn btn-warning" required name="year" id="year">
+                            <option disabled selected> Year </option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <select class="btn btn-warning" required name="racename" id="racename">
+                            <option disabled selected> Race </option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="card-body">
+            {% if qualify.Races %}
+                <h5 class="card-text"> <b>Race:</b> {{ qualify.Races[0].raceName }} </h5>
+                <h5 class="card-text"> <b>Season:</b> {{ qualify.Races[0].season }} </h5>
+                <h5 class="card-text"> <b>Round: </b>{{ qualify.Races[0].round }} </h5>
+                {% if data.Races %}
+                    <img class="logo" src="/static/race_pics/{{data.Races[0].raceName}}.jpg" alt="race pic"><br><br>
+                {% endif %}
+            {% endif %}
+        </div>
+        <div class="card-footer">
+            {% if data.Races %}
+                <a href="{{data.Races[0].url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> More race info from Wikipedia </a>
+            {% endif %}
+        </div>
+    </div>
+    </div>
+
+    <br>
+
+    <div class="card bg-light mb-3">
+        <div class="card-header bg-warning text-black"> Fastest Lap </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-sm table-success table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th> Driver Name </th>
+                            <th> Lap Time </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            {% if fastest_lap %}
+                                <td> {{ fastest_lap.Results[0].Driver.givenName }} {{ fastest_lap.Results[0].Driver.familyName }}</td>
+                                <td> {{ fastest_lap.Results[0].FastestLap.Time.time }} </td>
+                            {% endif %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <div class="card bg-light mb-3">
+        <div class="card-header bg-warning text-black"> Results </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="results" class="table table-sm table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th> Position </th>
+                            <th> Driver </th>
+                            <th> Team </th>
+                            <th> Grid </th>
+                            <th> Status </th>
+                            <th> Fastest Lap </th>
+                            <th> Points </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if result_data %}
+                            {% for x in result_data %}
+                                <tr>
+                                    <td> {{ x.position }} </td>
+                                    <td> {{ x.Driver.givenName }} {{ x.Driver.familyName }} </td>
+                                    <td id="{{ x.Constructor.name.replace(' ','') }}"> {{ x.Constructor.name }} </td>
+                                    <td> {{ x.grid }} </td>
+                                    <td> {{ x.status }} </td>
+                                    <td>{% if x.FastestLap %}
+                                        {{ x.FastestLap.Time.time }}
+                                    {% endif %}
+                                    </td>
+                                    <td> {{ x.points }} </td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-danger" type="buton" onclick="export_to_csv()"> Download table as CSV </button>
+        </div>
+    </div>
+
+    <br>
+    <div class="card bg-light mb-3">
+        <div class="card-header bg-warning text-black"> Qualifying Results </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="results" class="table table-sm table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th> Position </th>
+                            <th> Driver </th>
+                            <th> Team </th>
+                            <th> Q1 </th>
+                            <th> Q2 </th>
+                            <th> Q3 </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if qualify_data %}
+                            {% for x in qualify_data %}
+                                <tr>
+                                    <td> {{ x.position }} </td>
+                                    <td> {{ x.Driver.givenName }} {{ x.Driver.familyName }} </td>
+                                    <td id="{{ x.Constructor.name.replace(' ','') }}"> {{ x.Constructor.name }} </td>
+                                    <td> {{ x.Q1 }}</td>
+                                    <td> {{ x.Q2 }}</td>
+                                    <td> {{ x.Q3 }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+    // this is the javascript for creating a downloadable csv from the result data table
+    // first function is for creating csv data from table
+        function export_to_csv() {
+            var data = [];
+            var row = document.querySelectorAll("#results tr");
+            for (var i = 0; i < row.length; i++) {
+                var column = row[i].querySelectorAll('#results td,th');
+                var sheet_row = [];
+                for (var x = 0; x < column.length; x++) {
+                    sheet_row.push(column[x].innerHTML);
+                }
+                data.push(sheet_row.join(","));
+            }
+            data = data.join('\n');
+            csv_download(data);
+        }
+
+    // this function then downloads the data in the previous function
+        function csv_download(data) {
+            csv = new Blob([data], {
+                type: "text/csv"
+            });
+            var download = document.createElement('a');
+            download.download = "races.csv";
+            var url = window.URL.createObjectURL(csv);
+            download.href = url;
+            download.click();
+        }
+    </script>
+
+{% endblock %}
