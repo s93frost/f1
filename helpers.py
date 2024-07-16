@@ -18,24 +18,6 @@ def login_required(f):
     return decorated_function
 
 
-def new_api_test():
-    """function for new api"""
-    try:
-        response = requests.get(
-            f"https://f1connectapi.vercel.app/api/current/last", timeout=120
-        )
-        if response.status_code == 200:
-            print("successfully fetched the data")
-        else:
-            print(f"fastest: there's a {response.status_code} error with your request")
-        data = response.json()
-        return data
-
-    except (requests.RequestException, ValueError, KeyError, IndexError):
-        print(f"fastest: there's a {response.status_code} error with your request")
-        return None
-
-
 def picture(wiki_search_title):
     """MediaWiki API for returning main page image of an article - 
     used in conjuction with URL received from ergast API"""
@@ -186,6 +168,24 @@ def qualifying_default():
         print(
             f"result_default: there's a {response.status_code} error with your request"
         )
+        return None
+    
+
+def new_api_test():
+    """function for new api"""
+    try:
+        response = requests.get(
+            f"https://f1connectapi.vercel.app/api/current/last", timeout=120
+        )
+        if response.status_code == 200:
+            print("successfully fetched the data")
+        else:
+            print(f"fastest: there's a {response.status_code} error with your request")
+        data = response.json()
+        return data
+
+    except (requests.RequestException, ValueError, KeyError, IndexError):
+        print(f"fastest: there's a {response.status_code} error with your request")
         return None
 
 

@@ -84,13 +84,11 @@ def index():
     )[0]["username"]
 
     last_race = new_api_test()  # variable for the most recent completed race
-    print(f"LAST RACE URL = {last_race}")
     #idented the below to check for last_race being built
     if last_race:
         global current_season
         current_season = last_race["season"]
     next = next_race(1)
-    print(f'NEXT RACE ==== {next}')
     next_plus_one = next_race(2)
 
     # calling wiki picture api functions for each track if not already exists
