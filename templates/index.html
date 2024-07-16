@@ -41,12 +41,13 @@
                             <h5> {{ last_race.race.raceName }} </h5>
                             <p class="card-text"> {{ last_race.race.0.circuit.circuitName }} </p>
                             <p class="card-text"> {{ last_race.race.0.circuit.country }} </p>
-                            <p class="card-text"> {{ last_race }} </p>
-                            <p class="card-text"> {{ last_race }} </p>
+                            <p class="card-text"> {{ last_race.race.0.schedule.race.date }} </p>
+                            <p class="card-text"> {{ last_race.race.0.schedule.race.time }} </p>
                             <img class="index_logo" src="/static/track_pics/{{last_race.race.0.circuit.circuitName}}.jpg" alt="image"><br><br>
                             <a href="{{last_race.race.0.circuit.url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> More circuit info from Wikipedia </a>
                         </div>
                         <div class="card-footer text-muted">
+                            {{ last_race.race.0.circuit.city }}
                             <div>
                                 <iframe id="myMap" width="250" height="200" frameborder="0" src="https://www.bing.com/maps/embed?h=200&w=250&cp={{ last_race }}~{{ last_race }}&lvl=5&typ=d&sty=r&src=SHELL&FORM=MBEDV8" scrolling="no">
                                 </iframe>
@@ -64,12 +65,13 @@
                             <h5> {{ next.raceName }} </h5>
                             <p class="card-text"> {{ next.race.0.circuit.circuitName }} </p>
                             <p class="card-text"> {{ next.race.0.circuit.country }} </p>
-                            <p class="card-text"> {{ next }} </p>
-                            <p class="card-text"> {{ next }} </p>
+                            <p class="card-text"> {{ next.race.0.schedule.race.date }} </p>
+                            <p class="card-text"> {{ next.race.0.schedule.race.time }} </p>
                             <img class="index_logo" src="/static/track_pics/{{next.race.0.circuit.circuitName}}.jpg" alt="image"><br><br>
                             <a href="{{next.race.0.circuit.url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> More circuit info from Wikipedia </a>
                         </div>
                         <div class="card-footer text-muted">
+                            {{ next.race.0.circuit.city }}
                             <div>
                                 <iframe id="myMap" width="250" height="200" frameborder="0" src="https://www.bing.com/maps/embed?h=200&w=250&cp={{ next }}~{{ next }}&lvl=5&typ=d&sty=r &src=SHELL&FORM=MBEDV8" scrolling="no">
                                 </iframe>
@@ -91,12 +93,13 @@
                             <h5> {{ next_plus_one.raceName }} </h5>
                             <p class="card-text"> {{ next_plus_one.race.0.circuit.circuitName }} </p>
                             <p class="card-text"> {{ next_plus_one.race.0.circuit.country }} </p>
-                            <p class="card-text"> {{ next_plus_one }} </p>
-                            <p class="card-text"> {{ next_plus_one }} </p>
+                            <p class="card-text"> {{ next_plus_one.race.0.schedule.race.date }} </p>
+                            <p class="card-text"> {{ next_plus_one.race.0.schedule.race.time }} </p>
                             <img class="index_logo" src="/static/track_pics/{{next_plus_one.race.0.circuit.circuitName}}.jpg" alt="image"><br><br>
                             <a href="{{next_plus_one.race.0.circuit.url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> More circuit info from Wikipedia </a>
                         </div>
                         <div class="card-footer text-muted">
+                            {{ next_plus_one.race.0.circuit.city }}
                             <div>
                                 <iframe id="myMap" width="250" height="200" frameborder="0" src="https://www.bing.com/maps/embed?h=200&w=250&cp={{ next_plus_one }}~{{ next_plus_one }}&lvl=5&typ=d&sty=r&src=SHELL&FORM=MBEDV8" scrolling="no">
                                 </iframe>
