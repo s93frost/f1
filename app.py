@@ -183,6 +183,8 @@ def drivers():
 
     driver_standing = driver_standings()
 
+    print(driver_standing)
+
     return render_template(
         "drivers.html", driver_standing=driver_standing, current_season=current_season
     )

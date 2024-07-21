@@ -22,24 +22,24 @@
         {% for x in driver_standing %}
             <div class="col mb-5">
                 <div class="card">
-                    <div class="constructor_header" id="{{ x.Constructors[0].name.replace(' ','') }}">
+                    <div class="constructor_header" id="{{ x.teamId.replace(' ','') }}">
                         <h5> {{ x.position }} </h5>
                         <h7> {{ x.points }} Pts </h7>
                     </div>
                     <div class="card-body" id="team-card">
-                        <h5 class="card-title"> {{ x.Driver.givenName }} </h5>
-                        <h5 class="card-title"> {{ x.Driver.familyName }} </h5>
-                        <h6 class="card-title"> No {{ x.Driver.permanentNumber }} - Wins: {{ x.wins }} </h6>
+                        <h5 class="card-title"> {{ x.driver.name }} </h5>
+                        <h5 class="card-title"> {{ x.driver.surname }} </h5>
+                        <h6 class="card-title"> No {{ x.driver.number }} - Wins: {{ x }} </h6>
                         <div>
-                            <img class="driver_logo" src="/static/driver_pics/{{x.Driver.givenName}}{{x.Driver.familyName}}.jpg" alt="{{x.Driver.givenName}}{{x.Driver.familyName}}">
+                            <img class="driver_logo" src="/static/driver_pics/{{x.driver.name}}{{x.driver.surname}}.jpg" alt="{{x.driver.name}}{{x.driver.surname}}">
                         </div>
                         <div>
-                            <a href="{{ x.Driver.url }}" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> More driver info from Wikipedia </a>
+                            <a href="{{ x.driver.url }}" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> More driver info from Wikipedia </a>
                         </div>
                     </div>
 
-                    <div class="driver_header" id="{{ x.Constructors[0].name.replace(' ','') }}">
-                        <h5 class="constructor" id="{{ x.Constructors[0].name.replace(' ','') }}"> {{ x.Constructors[0].name }} </h5>
+                    <div class="driver_header" id="{{ x.teamId.replace(' ','') }}">
+                        <h5 class="constructor" id="{{ x.teamId.replace(' ','') }}"> {{ x.team.teamName }} </h5>
                     </div>
                 </div>
             </div>
