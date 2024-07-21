@@ -27,7 +27,6 @@ from helpers import (
     track_pic,
     qualifying,
     qualifying_default,
-    new_api_test,
 )
 
 # Configure application
@@ -83,7 +82,8 @@ def index():
         db.execute("SELECT username FROM users WHERE id = ?", session["user_id"])
     )[0]["username"]
 
-    last_race = new_api_test()  # variable for the most recent completed race
+    last_race = previous_race()  # variable for the most recent completed race
+
     #idented the below to check for last_race being built
     if last_race:
         global current_season

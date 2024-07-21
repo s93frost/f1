@@ -169,57 +169,39 @@ def qualifying_default():
             f"result_default: there's a {response.status_code} error with your request"
         )
         return None
-    
-
-def new_api_test():
-    """function for new api"""
-    try:
-        response = requests.get(
-            f"https://f1connectapi.vercel.app/api/current/last", timeout=120
-        )
-        if response.status_code == 200:
-            print("successfully fetched the data")
-        else:
-            print(f"fastest: there's a {response.status_code} error with your request")
-        data = response.json()
-        return data
-
-    except (requests.RequestException, ValueError, KeyError, IndexError):
-        print(f"fastest: there's a {response.status_code} error with your request")
-        return None
 
 
+# the below has been updated
 def previous_race():
     """API function for returning previous race before the most recent"""
     try:
         response = requests.get(
-            "http://ergast.com/api/f1/current/last/results.json?limit=500", 
+            "https://f1connectapi.vercel.app/api/current/last", 
             timeout=120
         )
         if response.status_code == 200:
             print("successfully fetched the data")
 
         data = response.json()
-        previous_round = int((data)["MRData"]["RaceTable"]["round"])
-        # if it's the first race of the season return the last race of least season
-        if previous_round < 1:
-            season = int((data)["MRData"]["RaceTable"]["season"])
+
+        # if it's the first race of the season return the last race of last season
+        previous_round = int((data)["round"])
+        if previous_round <= 1:
+            season = int((data)["season"])
             last_season = season - 1
             response2 = requests.get(
-                f"http://ergast.com/api/f1/{last_season}/22/results.json?limit=500", 
+                f"https://f1connectapi.vercel.app/api/{last_season}/22", 
                 timeout=120
             )
             if response2.status_code == 200:
                 data1 = response2.json()
-                return (data1)["MRData"]["RaceTable"]["Races"][0]
-        else:  # if after first race of season, return  previous race of season
-            response2 = requests.get(
-                f"http://ergast.com/api/f1/current/{previous_round}/results.json?limit=500", 
-                timeout=120
-            )
-            if response2.status_code == 200:
-                data1 = response2.json()
-                return (data1)["MRData"]["RaceTable"]["Races"][0]
+                return data1
+
+        else:  # if after first race of season, return previous race of season
+            if response.status_code == 200:
+                return data
+            else:
+                return None
 
     except (requests.RequestException, ValueError, KeyError, IndexError):
         print(
@@ -227,13 +209,14 @@ def previous_race():
         )
         return None
 
-
+# the below has been updated
 def next_race(number):
     """API function for returning nth next race from the last 
     (increments e.g 1 is next, 2 is the second race from now etc)"""
     try:
         response = requests.get(
-            "https://f1connectapi.vercel.app/api/current/last", timeout=120
+            "https://f1connectapi.vercel.app/api/current/last",
+            timeout=120
         )
         if response.status_code == 200:
             print("successfully fetched the data")
@@ -243,11 +226,13 @@ def next_race(number):
             )
 
         data = response.json()
-        current_year = data["season"]
+        current_year = int(data["season"])
         current_round = int((data)["round"])
+
         if current_round >= 22:
             return False  # return false at end of season for app.py to use
-        next_round = current_round + number  # takes the last race round and adds 1
+
+        next_round = current_round + number  # takes the last race round and nth number argument
         response2 = requests.get(
             f"https://f1connectapi.vercel.app/api/{current_year}/{next_round}", timeout=120
         )
