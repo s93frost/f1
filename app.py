@@ -114,12 +114,12 @@ def index():
             track_pic(next_plus_one)
 
     # dict of teams in currrent year - preloads so wait time isn't  long on /drivers route
-    #if not teams_dict:
-        #global teams  # global can be used by render template once self and teams_dict already made
-        #teams = teams_lookup()
-        #for team in teams:
-            #name = team["constructorId"]
-            #teams_dict[name] = team
+    if not teams_dict:
+        global teams  # global can be used by render template once self and teams_dict already made
+        teams = teams_lookup()
+        for team in teams:
+            name = team["teamId"]
+            teams_dict[name] = team
 
     return render_template(
         "index.html",
@@ -142,7 +142,7 @@ def drivers():
         global teams
         teams = teams_lookup()
         for team in teams:
-            name = team["constructorId"]
+            name = team["teamId"]
             teams_dict[name] = team
 
     # for dict of all drivers in currrent year
@@ -159,13 +159,13 @@ def drivers():
             team_name = team
             drivers_and_teams[team_name] = []
             for driver in drivers_for_team(team):
-                d = driver["driverId"]
+                d = driver["driver"]["driverId"]
                 drivers_and_teams[team].append(d)
 
     # to pull all pictures for drivers from their wikipedia url if file not already exists
     for x in drivers_dict.values():
         if os.path.isfile(
-            f'./static/driver_pics/{x["givenName"]}{x["familyName"]}.jpg'
+            f'./static/driver_pics/{x["name"]}{x["surname"]}.jpg'
         ):
             continue
         else:
@@ -178,12 +178,10 @@ def drivers():
             if url:
                 urllib.request.urlretrieve(
                     url,
-                    f'./static/driver_pics/{x["givenName"]}{x["familyName"]}.jpg',
+                    f'./static/driver_pics/{x["name"]}{x["surname"]}.jpg',
                 )
 
     driver_standing = driver_standings()
-
-    print(driver_standing)
 
     return render_template(
         "drivers.html", driver_standing=driver_standing, current_season=current_season
@@ -201,7 +199,7 @@ def constructors():
         global teams
         teams = teams_lookup()
         for team in teams:
-            name = team["constructorId"]
+            name = team["teamId"]
             teams_dict[name] = team
 
     # to pull all pictures for teams from their wikipedia url if file not already exists
@@ -209,7 +207,7 @@ def constructors():
     if team_pics is False:
         for x in teams_dict.values():
             if os.path.isfile(
-                f'./static/team_pics/{x["constructorId"]}.jpg'
+                f'./static/team_pics/{x["teamId"]}.jpg'
             ):
                 continue
             else:
@@ -221,7 +219,7 @@ def constructors():
                 if url:
                     urllib.request.urlretrieve(
                         url,
-                        f'./static/team_pics/{x["constructorId"]}.jpg',
+                        f'./static/team_pics/{x["teamId"]}.jpg',
                     )
         # sets variable as true after loop run so doesn't check again if already pulled
         team_pics = True
@@ -240,7 +238,7 @@ def constructors():
             team_name = team
             drivers_and_teams[team_name] = []
             for driver in drivers_for_team(team):
-                d = driver["driverId"]
+                d = driver["driver"]["driverId"]
                 drivers_and_teams[team].append(d)
 
     team_standing = team_standings()
@@ -261,6 +259,7 @@ def results():
 
     if not seasons_and_names:
         all_seasons = seasons_history()
+        print(all_seasons)
         # get list of all seasons being pulled by APi (offset due to size so starts in later year)
         for x in all_seasons:
             seasons_and_names[x["season"]] = []

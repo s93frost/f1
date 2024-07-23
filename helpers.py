@@ -245,11 +245,12 @@ def next_race(number):
         return None
 
 
+# the below has been updated
 def teams_lookup():
     """API function for returning all teams in current season"""
     try:
         response = requests.get(
-            "http://ergast.com/api/f1/current/constructors.json?limit=500", timeout=120
+            "https://f1connectapi.vercel.app/api/current/teams", timeout=120
         )
         if response.status_code == 200:
             print("successfully fetched the data")
@@ -258,18 +259,19 @@ def teams_lookup():
                 f"teams_lookup: there's a {response.status_code} error with your request"
             )
         data = response.json()
-        return (data)["MRData"]["ConstructorTable"]["Constructors"]
+        return (data)["teams"]
 
     except (requests.RequestException, ValueError, KeyError, IndexError):
         print(f"teams_lookup: there's a {response.status_code} error with your request")
         return None
 
 
+# the below has been updated
 def drivers_lookup():
     """API function for returning all drivers in current season"""
     try:
         response = requests.get(
-            "http://ergast.com/api/f1/current/drivers.json?limit=500", timeout=120
+            "https://f1connectapi.vercel.app/api/current/drivers", timeout=120
         )
         if response.status_code == 200:
             print("successfully fetched the data")
@@ -278,7 +280,7 @@ def drivers_lookup():
                 f"drivers_lookup: there's a {response.status_code} error with your request"
             )
         data = response.json()
-        return (data)["MRData"]["DriverTable"]["Drivers"]
+        return (data)["drivers"]
 
     except (requests.RequestException, ValueError, KeyError, IndexError):
         print(
@@ -287,11 +289,12 @@ def drivers_lookup():
         return None
 
 
+# the below has been updated
 def drivers_for_team(constructor):
     """API function for returning the drivers for a specific team"""
     try:
         response = requests.get(
-            f"http://ergast.com/api/f1/current/constructors/{constructor}/drivers.json?limit=500", 
+            f"https://f1connectapi.vercel.app/api/current/teams/{constructor}/drivers", 
             timeout=120
         )
         if response.status_code == 200:
@@ -301,7 +304,7 @@ def drivers_for_team(constructor):
                 f"drivers_for_team: there's a {response.status_code} error with your request"
             )
         data = response.json()
-        return (data)["MRData"]["DriverTable"]["Drivers"]
+        return (data)["drivers"]
 
     except (requests.RequestException, ValueError, KeyError, IndexError):
         print(
@@ -334,11 +337,13 @@ def driver_standings():
         return None
 
 
+# the below has been updated
 def team_standings():
     """API function for returning the teams based on championship standing"""
     try:
         response = requests.get(
-            "http://ergast.com/api/f1/current/constructorStandings.json?", timeout=120
+            "https://f1connectapi.vercel.app/api/current/constructors-championship",
+            timeout=120
         )
         if response.status_code == 200:
             print("successfully fetched the data")
@@ -347,9 +352,7 @@ def team_standings():
                 f"team_standings: there's a {response.status_code} error with your request"
             )
         data = response.json()
-        return (data)["MRData"]["StandingsTable"]["StandingsLists"][0][
-            "ConstructorStandings"
-        ]
+        return (data)["constructors_championship"]
 
     except (requests.RequestException, ValueError, KeyError, IndexError):
         print(
