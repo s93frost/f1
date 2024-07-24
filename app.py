@@ -370,7 +370,7 @@ def driver_history():
         global teams
         teams = teams_lookup()
         for team in teams:
-            name = team["constructorId"]
+            name = team["teamId"]
             teams_dict[name] = team
 
     if not drivers_dict: # for dict of all drivers in currrent year
@@ -383,23 +383,23 @@ def driver_history():
     # dict for proper names for select drop-down instead of driver ids and constructor_ids
     if not names_dict:
         for team in teams_dict.values():
-            team_name = team["name"]
+            team_name = team["teamName"]
             names_dict[team_name] = []
-            for driver in drivers_for_team(team["constructorId"]):
-                d = driver["givenName"] + " " + driver["familyName"]
+            for driver in drivers_for_team(team["teamId"]):
+                d = driver["name"] + " " + driver["surname"]
                 names_dict[team_name].append(d)
 
     # dict to store vaues of driver ids and names
     driver_names = {}
     for driver in drivers_dict.values():
-        drivername = driver["givenName"] + " " + driver["familyName"]
+        drivername = driver["name"] + " " + driver["surname"]
         driver_names[drivername] = driver["driverId"]
 
     # dict to store vaues of driver ids and names
     team_names = {}
     for team in teams_dict.values():
         tname = team["name"]
-        team_names[tname] = team["constructorId"]
+        team_names[tname] = team["teamId"]
 
     if request.method == "POST":
         drivers_name = request.form.get("driver_name")
