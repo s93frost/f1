@@ -71,22 +71,46 @@ def fastest(year, race):
         return None
 
 
+# the below has been updated
 def seasons_history():
     """API function for returning seasons available in API"""
     try:
-        response = requests.get("http://ergast.com/api/f1.json?limit=1000&offset=250", timeout=120)
+        response = requests.get("https://f1connectapi.vercel.app/api/seasons", timeout=120)
         if response.status_code == 200:
             print("successfully fetched the data")
         else:
             print(
                 f"seasons_history: there's a {response.status_code} error with your request"
             )
-        data = response.json()["MRData"]["RaceTable"]["Races"]
+        data = response.json()["championships"]
         return data
 
     except (requests.RequestException, ValueError, KeyError, IndexError):
         print(
             f"seasons_history: there's a {response.status_code} error with your request"
+        )
+        return None
+
+
+# the below has been updated
+def races(year):
+    """API function for returning races of a specific season available in API"""
+    try:
+        response = requests.get(
+            f"https://f1connectapi.vercel.app/api/{year}", timeout=120
+        )
+        if response.status_code == 200:
+            print("successfully fetched the data")
+        else:
+            print(
+                f"races: there's a {response.status_code} error with your request"
+            )
+        data = response.json()
+        return data
+
+    except (requests.RequestException, ValueError, KeyError, IndexError):
+        print(
+            f"races: there's a {response.status_code} error with your request"
         )
         return None
 

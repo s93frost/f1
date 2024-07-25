@@ -27,6 +27,7 @@ from helpers import (
     track_pic,
     qualifying,
     qualifying_default,
+    races,
 )
 
 # Configure application
@@ -112,6 +113,7 @@ def index():
             f'./static/track_pics/{next_plus_one["race"][0]["circuit"]["circuitName"]}.jpg'
         ):
             track_pic(next_plus_one)
+
 
     # dict of teams in currrent year - preloads so wait time isn't  long on /drivers route
     if not teams_dict:
@@ -259,15 +261,22 @@ def results():
 
     if not seasons_and_names:
         all_seasons = seasons_history()
-        print(all_seasons)
-        # get list of all seasons being pulled by APi (offset due to size so starts in later year)
+        # get list of all seasons being pulled by API (offset due to size so starts in later year)
         for x in all_seasons:
-            seasons_and_names[x["season"]] = []
-            seasons_and_races[x["season"]] = {}
+            # this will need deleting out when all seasons / races available!!!!!!!!!!!!!!!
+            if x["year"] == 2024:
+                # list for the javascript options on results post
+                seasons_and_names[x["championshipId"]] = []
+                # dict to match names to rounds
+                seasons_and_races[x["championshipId"]] = {}
         # to get all the rounds and add them to the season key in the dict
         for x in all_seasons:
-            seasons_and_names[x["season"]].append(x["raceName"])
-            seasons_and_races[x["season"]].update({x["raceName"]: x["round"]})
+            # this will need deleting out when all seasons / races available!!!!!!!!!!!!!!!
+            if x["year"] == 2024:
+                season_races = races(str(x["year"]))
+                for r in season_races["races"]:
+                    seasons_and_names[r["championshipId"]].append(r["raceName"])
+                    seasons_and_races[r["championshipId"]].update({r["raceName"]: r["round"]})
 
     if request.method == "POST":
         year = request.form.get("year")
