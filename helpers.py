@@ -1,21 +1,6 @@
 ''' This file is storing all the function & API call functions for web app '''
 import urllib
-from functools import wraps
-from flask import redirect, session
 import requests
-
-
-def login_required(f):
-    """Decorate routes to require login.  
-    https://flask.palletsprojects.com/en/2.3.x/patterns/viewdecorators/#view-decorators"""
-
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if session.get("user_id") is None:
-            return redirect("/login")
-        return f(*args, **kwargs)
-
-    return decorated_function
 
 
 def picture(wiki_search_title):

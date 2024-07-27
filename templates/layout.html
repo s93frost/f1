@@ -25,43 +25,21 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbar">
-                    {% if session["user_id"] %}
-                        <ul class="navbar-nav me-auto mt-2">
-                            <li class="nav-item"><a class="btn btn-success" href="/">Home</a></li>
-                            <li class="gap"></li>
-                            <li class="nav-item"><a class="btn btn-success" href="/drivers">Drivers</a></li>
-                            <li class="gap"></li>
-                            <li class="nav-item"><a class="btn btn-success" href="/teams">Teams</a></li>
-                            <li class="gap"></li>
-                            <li class="nav-item"><a class="btn btn-success" href="/results">Race Results</a></li>
-                            <li class="gap"></li>
-                            <li class="nav-item"><a class="btn btn-success" href="/driver_history">Driver History</a></li>
-                        </ul>
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item"><a class="nav-link" href="/">Hello {{ user }} </a></li>
-
-                            <li class="nav-item">
-                                <div class="dropdown">
-                                    <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Account
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="/deregister">
-                                            <h7 class="red"> Close Account </h7>
-                                        </a>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="gap"></li>
-                            <li class="nav-item"><a class="btn btn-warning" href="/logout"> Log Out </a></li>
-                        </ul>
-                    {% else %}
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item"><a class="btn btn-warning" href="/register">Register</a></li>
-                            <li class="gap"></li>
-                            <li class="nav-item"><a class="btn btn-success" href="/login">Log In</a></li>
-                        </ul>
-                    {% endif %}
+                    <ul class="navbar-nav me-auto mt-2">
+                        <li class="nav-item"><a class="btn btn-success" href="/">Home</a></li>
+                        <li class="gap"></li>
+                        <li class="nav-item"><a class="btn btn-success" href="/drivers">Drivers</a></li>
+                        <li class="gap"></li>
+                        <li class="nav-item"><a class="btn btn-success" href="/teams">Teams</a></li>
+                        <li class="gap"></li>
+                        <li class="nav-item"><a class="btn btn-success" href="/results">Race Results</a></li>
+                        <li class="gap"></li>
+                        <li class="nav-item"><a class="btn btn-success" href="/driver_history">Driver History</a></li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="/">Hello</a></li>
+                        <li class="gap"></li>
+                    </ul>
                 </div>
             </div>
         </nav>

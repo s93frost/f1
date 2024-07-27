@@ -18,9 +18,9 @@
                             <a class="nav-link" data-bs-toggle="tab" href="#last_race"> ROUND {{ last_race.round }} - Previous race: {{ last_race.race.0.raceName }} </a>
                         </li>
                     {% endif %}
-                    {% if next %}
+                    {% if next_r %}
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="true" data-bs-toggle="tab" href="#next"> ROUND {{ next.round }} - Next race: {{ next.race.0.raceName }} </a>
+                            <a class="nav-link active" aria-current="true" data-bs-toggle="tab" href="#next"> ROUND {{ next_r.round }} - Next race: {{ next_r.race.0.raceName }} </a>
                         </li>
                     {% else %}
                         <li class="nav-item">
@@ -59,26 +59,26 @@
                     </div>
                 {% endif %}
 
-                {% if next %}
+                {% if next_r %}
                     <div class="tab-pane active" id="next">
                         <div class="card-body">
-                            <h5> {{ next.raceName }} </h5>
-                            <p class="card-text"> {{ next.race.0.circuit.circuitName }} </p>
-                            <p class="card-text"> {{ next.race.0.circuit.country }} </p>
-                            <p class="card-text"> {{ next.race.0.schedule.race.date }} </p>
-                            <p class="card-text"> {{ next.race.0.schedule.race.time }} </p>
-                            <img class="index_logo" src="/static/track_pics/{{next.race.0.circuit.circuitName}}.jpg" alt="image"><br><br>
-                            <a href="{{next.race.0.circuit.url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> More circuit info from Wikipedia </a>
+                            <h5> {{ next_r.raceName }} </h5>
+                            <p class="card-text"> {{ next_r.race.0.circuit.circuitName }} </p>
+                            <p class="card-text"> {{ next_r.race.0.circuit.country }} </p>
+                            <p class="card-text"> {{ next_r.race.0.schedule.race.date }} </p>
+                            <p class="card-text"> {{ next_r.race.0.schedule.race.time }} </p>
+                            <img class="index_logo" src="/static/track_pics/{{next_r.race.0.circuit.circuitName}}.jpg" alt="image"><br><br>
+                            <a href="{{next_r.race.0.circuit.url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> More circuit info from Wikipedia </a>
                         </div>
                         <div class="card-footer text-muted">
-                            {{ next.race.0.circuit.city }}
+                            {{ next_r.race.0.circuit.city }}
                             <div>
-                                <iframe id="myMap" width="250" height="200" frameborder="0" src="https://www.bing.com/maps/embed?h=200&w=250&cp={{ next }}~{{ next }}&lvl=5&typ=d&sty=r &src=SHELL&FORM=MBEDV8" scrolling="no">
+                                <iframe id="myMap" width="250" height="200" frameborder="0" src="https://www.bing.com/maps/embed?h=200&w=250&cp={{ next_r }}~{{ next_r }}&lvl=5&typ=d&sty=r &src=SHELL&FORM=MBEDV8" scrolling="no">
                                 </iframe>
                             </div>
                         </div>
                         <div>
-                            <a id="largeMapLink" target="_blank" href="https://www.bing.com/maps?cp={{ next }}~{{ next }}&amp;sty=r&amp;lvl=5&amp;FORM=MBEDLD">View Larger Map</a> &nbsp; | &nbsp;
+                            <a id="largeMapLink" target="_blank" href="https://www.bing.com/maps?cp={{ next_r }}~{{ next_r }}&amp;sty=r&amp;lvl=5&amp;FORM=MBEDLD">View Larger Map</a> &nbsp; | &nbsp;
                         </div>
                     </div>
                 {% else %}

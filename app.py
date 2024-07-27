@@ -5,12 +5,10 @@ import os
 import urllib.request
 
 from cs50 import SQL
-from flask import Flask, redirect, render_template, request, session
-from werkzeug.security import check_password_hash, generate_password_hash
+from flask import Flask, render_template, request
 from flask_session import Session
 
 from helpers import (
-    login_required,
     lookup,
     drivers_lookup,
     teams_lookup,
@@ -46,23 +44,10 @@ drivers_and_teams = {}
 drivers_dict = {}
 teams_dict = {}
 names_dict = {}
-team_pics = False
-current_season = ""
+TEAM_PICS = False
+CURRENT_SEASON = ""
 seasons_and_names = {}  # dict for storing seasons and race_name combinations
 seasons_and_races = {}  # dict for storing seasons and race_name combinations
-
-@app.context_processor
-def inject_user():
-    """to create dict of user session to make user available before templates are rendered"""
-    try:
-        x = session["user_id"]
-    except:
-        return {}
-    else:
-        username = db.execute(
-            "SELECT username FROM users WHERE id = ?", session["user_id"]
-        )[0]["username"].capitalize()
-        return dict(user=username)
 
 
 @app.after_request
@@ -76,20 +61,16 @@ def after_request(response):
 
 
 @app.route("/", methods=["GET"])
-@login_required  # decorator to ensure logged in
 def index():
     """Show's main page including upcoming race info"""
-    username = (
-        db.execute("SELECT username FROM users WHERE id = ?", session["user_id"])
-    )[0]["username"]
 
     last_race = previous_race()  # variable for the most recent completed race
 
     #idented the below to check for last_race being built
     if last_race:
-        global current_season
-        current_season = last_race["season"]
-    next = next_race(1)
+        global CURRENT_SEASON
+        CURRENT_SEASON = last_race["season"]
+    next_r = next_race(1)
     next_plus_one = next_race(2)
 
     # calling wiki picture api functions for each track if not already exists
@@ -101,11 +82,11 @@ def index():
             track_pic(last_race)
 
     # checks if next race returned by the API (for end of season)
-    if next is not None and next is not False:
+    if next_r is not None and next_r is not False:
         if not os.path.isfile(
-            f'./static/track_pics/{next["race"][0]["circuit"]["circuitName"]}.jpg'
+            f'./static/track_pics/{next_r["race"][0]["circuit"]["circuitName"]}.jpg'
         ):
-            track_pic(next)
+            track_pic(next_r)
 
     # checks if next plus one race returned by the API (for end of season)
     if next_plus_one is not None and next_plus_one is not False:
@@ -125,16 +106,13 @@ def index():
 
     return render_template(
         "index.html",
-        username=username,
-        next=next,
+        next_r=next_r,
         next_plus_one=next_plus_one,
         last_race=last_race,
-        current_season=current_season,
     )
 
 
 @app.route("/drivers", methods=["GET"])
-@login_required  # decorator to ensure logged in
 def drivers():
     """Gets info for current drivers and displays their info in order of season standings"""
 
@@ -186,12 +164,11 @@ def drivers():
     driver_standing = driver_standings()
 
     return render_template(
-        "drivers.html", driver_standing=driver_standing, current_season=current_season
+        "drivers.html", driver_standing=driver_standing, CURRENT_SEASON=CURRENT_SEASON
     )
 
 
 @app.route("/teams", methods=["GET"])
-@login_required  # decorator to ensure logged in
 def constructors():
     """Gets info for current teams and displays their info in order of season standings"""
 
@@ -205,8 +182,8 @@ def constructors():
             teams_dict[name] = team
 
     # to pull all pictures for teams from their wikipedia url if file not already exists
-    global team_pics
-    if team_pics is False:
+    global TEAM_PICS
+    if TEAM_PICS is False:
         for x in teams_dict.values():
             if os.path.isfile(
                 f'./static/team_pics/{x["teamId"]}.jpg'
@@ -224,7 +201,7 @@ def constructors():
                         f'./static/team_pics/{x["teamId"]}.jpg',
                     )
         # sets variable as true after loop run so doesn't check again if already pulled
-        team_pics = True
+        TEAM_PICS = True
 
     # for dict of all drivers in currrent year
     if not drivers_dict:
@@ -250,12 +227,11 @@ def constructors():
         drivers_dict=drivers_dict,
         drivers_and_teams=drivers_and_teams,
         team_standing=team_standing,
-        current_season=current_season,
+        CURRENT_SEASON=CURRENT_SEASON,
     )
 
 
 @app.route("/results", methods=["GET", "POST"])
-@login_required  # decorator to ensure logged in
 def results():
     """Show's results of current race and allows users to select historical races to view"""
 
@@ -281,21 +257,21 @@ def results():
     if request.method == "POST":
         year = request.form.get("year")
         racename = request.form.get("racename")
-        round = seasons_and_races[year][racename]
+        race_round = seasons_and_races[year][racename]
 
         # if no constructor or driver entered on submit or doesnt exist
         if not year:
             link = "/results"
             message = "Please select a year in the dropdown"
             return render_template("error_message.html", message=message, link=link)
-        if not round:
+        if not race_round:
             link = "/results"
             message = "Please select a round in the dropdown"
             return render_template("error_message.html", message=message, link=link)
 
-        fastest_lap = fastest(year, round)  # for getting fastest lap of selected race
-        selected_data = result(year, round)  # for getting data for selected race
-        qualify = qualifying(year, round)
+        fastest_lap = fastest(year, race_round)  # for getting fastest lap of selected race
+        selected_data = result(year, race_round)  # for getting data for selected race
+        qualify = qualifying(year, race_round)
 
         if qualify["Races"]:
             qualify_data = qualify["Races"][0]["QualifyingResults"]
@@ -368,7 +344,6 @@ def results():
 
 
 @app.route("/driver_history", methods=["GET", "POST"])
-@login_required  # decorator to ensure logged in
 def driver_history():
     """allows user to pick drivers from current teams and 
     list all seasons that they've been with that team"""
@@ -437,7 +412,7 @@ def driver_history():
             drivers_name=drivers_name,
             seasons=seasons,
             constructor_name=constructor_name,
-            current_season=current_season,
+            CURRENT_SEASON=CURRENT_SEASON,
         )
 
     # if method = GET
@@ -452,157 +427,5 @@ def driver_history():
             drivers_name=drivers_name,
             seasons=seasons,
             constructor_name=constructor_name,
-            current_season=current_season,
+            CURRENT_SEASON=CURRENT_SEASON,
         )
-
-
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    """Log user in"""
-
-    # Forget any user_id
-    session.clear()
-
-    # resets these global variables if not already done
-    global drivers_and_teams
-    global teams_dict
-    global drivers_dict
-    global names_dict
-    global team_pics
-    global current_season
-    global seasons_and_names
-    global seasons_and_races
-    drivers_and_teams = {}
-    drivers_dict = {}
-    teams_dict = {}
-    names_dict = {}
-    team_pics = False
-    current_season = ""
-    seasons_and_names = {}
-    seasons_and_races = {}
-
-    # User reached route via POST (as by submitting a form via POST)
-    if request.method == "POST":
-        # Ensure username was submitted
-        if not request.form.get("username"):
-            link = "/login"
-            message = "Please provide a username"
-            return render_template("error_message.html", message=message, link=link)
-
-        # Ensure password was submitted
-        elif not request.form.get("password"):
-            link = "/login"
-            message = "Please provide a password"
-            return render_template("error_message.html", message=message, link=link)
-
-        # Query database for username
-        rows = db.execute(
-            "SELECT * FROM users WHERE username = ?", request.form.get("username")
-        )
-
-        # Ensure username exists and password is correct
-        if len(rows) != 1 or not check_password_hash(
-            rows[0]["hash"], request.form.get("password")
-        ):
-            link = "/login"
-            message = "Your username and password combination was incorrect"
-            return render_template("error_message.html", message=message, link=link)
-
-        # Remember which user has logged in
-        session["user_id"] = rows[0]["id"]
-
-        # Redirect user to home page
-        return redirect("/")
-
-    # User reached route via GET (as by clicking a link or via redirect)
-    else:
-        return render_template("login.html")
-
-
-@app.route("/logout")
-def logout():
-    """Log user out"""
-
-    session.clear()  # Forget any user_id
-
-    # resets these global variables
-    global drivers_and_teams
-    global teams_dict
-    global drivers_dict
-    global names_dict
-    global team_pics
-    global current_season
-    global seasons_and_names
-    global seasons_and_races
-    drivers_and_teams = {}
-    drivers_dict = {}
-    teams_dict = {}
-    names_dict = {}
-    team_pics = False
-    current_season = ""
-    seasons_and_names = {}
-    seasons_and_races = {}
-
-    # Redirect user to login form
-    return redirect("/")
-
-
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    """Register user"""
-
-    # Validate submission
-    if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
-        confirmation = request.form.get("confirmation")
-        hash_password = generate_password_hash(password)
-
-        # if no username
-        if not username:
-            link = "/register"
-            message = "Please enter a username in order to sign up"
-            return render_template("error_message.html", message=message, link=link)
-
-        already_exists = db.execute(
-            "SELECT username FROM users WHERE username = ?", username
-        )
-
-        if already_exists:
-            already_exists = already_exists[0]["username"]
-
-        if username == already_exists:
-            link = "/register"
-            message = "That username already exists"
-            return render_template("error_message.html", message=message, link=link)
-
-        # if no password or password not match confirmation
-        if not password or password != confirmation:
-            link = "/register"
-            message = "Please enter a password and make sure it matches the password confirmation"
-            return render_template("error_message.html", message=message, link=link)
-        # Remember registrant
-        db.execute(
-            "INSERT INTO users (username, hash) VALUES(?, ?)", username, hash_password
-        )
-        # once submitted it redirects to home
-        return redirect("/")
-
-    # if post not detected (i.e if GET) ask user to register
-    else:
-        return render_template("register.html")
-
-
-@app.route("/deregister", methods=["GET", "POST"])
-@login_required  # decorator to ensure logged in
-def deregister():
-    """deregister user"""
-
-    if request.method == "POST":
-        # Delete user from user table
-        db.execute("DELETE FROM users WHERE id = ?", session["user_id"])
-        # once submitted it redirects to home
-        return redirect("/logout")
-
-    else:
-        return render_template("deregister.html")
