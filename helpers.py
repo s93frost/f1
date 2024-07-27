@@ -100,11 +100,13 @@ def races(year):
         return None
 
 
+# the below has been updated
 def result_default():
     """API function for returning results of latest race"""
     try:
         response = requests.get(
-            "http://ergast.com/api/f1/current/last/results.json?limit=500", timeout=120
+            "https://f1connectapi.vercel.app/api/current/last/race?", 
+            timeout=120
         )
         if response.status_code == 200:
             print("successfully fetched the data")
@@ -112,7 +114,7 @@ def result_default():
             print(
                 f"result_default: there's a {response.status_code} error with your request"
             )
-        data = response.json()["MRData"]["RaceTable"]
+        data = response.json()
         return data
 
     except (requests.RequestException, ValueError, KeyError, IndexError):
@@ -217,6 +219,7 @@ def previous_race():
             "previous_race: there's an error with your request"
         )
         return None
+
 
 # the below has been updated
 def next_race(number):

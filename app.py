@@ -313,7 +313,7 @@ def results():
         data = result_default()
 
         # to pull picture for specific race loaded on page
-        wiki_url = data["Races"][0]["Circuit"]["url"]
+        wiki_url = data["races"]["circuit"]["url"]
         # splits out page title from wiki page for API search
         wiki_search_title = wiki_url.split("/")[-1]
         # uses title for API function search tp pull picture
@@ -321,14 +321,14 @@ def results():
         if url:
             urllib.request.urlretrieve(
                 url,
-                f'./static/race_pics/{data["Races"][0]["raceName"]}.jpg',
+                f'./static/race_pics/{data["races"]["raceName"]}.jpg',
             )
 
         current_year = data["season"]
-        current_round = data["round"]
+        current_round = previous_race()["round"] # round not included in result default api call
         # for getting fastest lap of last race
         fastest_lap = fastest(current_year, current_round)
-        result_data = data["Races"][0]["Results"]
+        result_data = data["races"]
         qualify = qualifying_default()
         qualify_data = qualify["Races"][0]["QualifyingResults"]
 

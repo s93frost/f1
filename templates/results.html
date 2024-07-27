@@ -105,20 +105,23 @@
                             <th> Driver </th>
                             <th> Team </th>
                             <th> Grid </th>
-                            <th> Status </th>
+                            <th> Retired? </th>
                             <th> Fastest Lap </th>
                             <th> Points </th>
                         </tr>
                     </thead>
                     <tbody>
                         {% if result_data %}
-                            {% for x in result_data %}
+                            {% for x in result_data["results"] %}
                                 <tr>
                                     <td> {{ x.position }} </td>
-                                    <td> {{ x.Driver.givenName }} {{ x.Driver.familyName }} </td>
-                                    <td id="{{ x.Constructor.name.replace(' ','') }}"> {{ x.Constructor.name }} </td>
+                                    <td> {{ x.driver.name }} {{ x.driver.surname }} </td>
+                                    <td id="{{ x.team.teamId.replace(' ','') }}"> {{ x.team.teamName }} </td>
                                     <td> {{ x.grid }} </td>
-                                    <td> {{ x.status }} </td>
+                                    <td>{% if x.retired != None %}
+                                        {{ x.retired }} 
+                                    {% endif %}
+                                    </td>
                                     <td>{% if x.FastestLap %}
                                         {{ x.FastestLap.Time.time }}
                                     {% endif %}
