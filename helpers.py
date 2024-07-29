@@ -13,7 +13,7 @@ def picture(wiki_search_title):
         }
         response = requests.get(url, headers=headers, timeout=120)
         if response.status_code == 200:
-            print("successfully fetched the data")
+            print("picture: successfully fetched the data")
         else:
             print(f"picture: there's a {response.status_code} error with your request")
         data = response.json()["query"]["pages"][0]["thumbnail"]["source"]
@@ -45,7 +45,7 @@ def fastest(year, race):
             f"http://ergast.com/api/f1/{year}/{race}/fastest/1/results.json?limit=500", timeout=120
         )
         if response.status_code == 200:
-            print("successfully fetched the data")
+            print("fastest: successfully fetched the data")
         else:
             print(f"fastest: there's a {response.status_code} error with your request")
         data = response.json()["MRData"]["RaceTable"]["Races"][0]
@@ -62,7 +62,7 @@ def seasons_history():
     try:
         response = requests.get("https://f1connectapi.vercel.app/api/seasons", timeout=120)
         if response.status_code == 200:
-            print("successfully fetched the data")
+            print("seasons_history: successfully fetched the data")
         else:
             print(
                 f"seasons_history: there's a {response.status_code} error with your request"
@@ -85,7 +85,7 @@ def races(year):
             f"https://f1connectapi.vercel.app/api/{year}", timeout=120
         )
         if response.status_code == 200:
-            print("successfully fetched the data")
+            print("races: successfully fetched the data")
         else:
             print(
                 f"races: there's a {response.status_code} error with your request"
@@ -105,11 +105,11 @@ def result_default():
     """API function for returning results of latest race"""
     try:
         response = requests.get(
-            "https://f1connectapi.vercel.app/api/current/last/race?", 
+            "https://f1connectapi.vercel.app/api/current/last/race", 
             timeout=120
         )
         if response.status_code == 200:
-            print("successfully fetched the data")
+            print("result_default: successfully fetched the data")
         else:
             print(
                 f"result_default: there's a {response.status_code} error with your request"
@@ -131,7 +131,7 @@ def result(year, race):
             f"http://ergast.com/api/f1/{year}/{race}/results.json?limit=500", timeout=120
         )
         if response.status_code == 200:
-            print("successfully fetched the data")
+            print("result: successfully fetched the data")
         else:
             print(f"result: there's a {response.status_code} error with your request")
         data = response.json()["MRData"]["RaceTable"]
@@ -139,6 +139,30 @@ def result(year, race):
 
     except (requests.RequestException, ValueError, KeyError, IndexError):
         print(f"result: there's a {response.status_code} error with your request")
+        return None
+
+
+# the below has been updated
+def qualifying_default():
+    """API function for returning results of latest race"""
+    try:
+        response = requests.get(
+            "https://f1connectapi.vercel.app/api/current/last/qualy", 
+            timeout=120
+        )
+        if response.status_code == 200:
+            print("qualifying_default: successfully fetched the data")
+        else:
+            print(
+                f"qualifying_default: there's a {response.status_code} error with your request"
+            )
+        data = response.json()
+        return data
+
+    except (requests.RequestException, ValueError, KeyError, IndexError):
+        print(
+            f"qualifying_default: there's a {response.status_code} error with your request"
+        )
         return None
 
 
@@ -149,36 +173,14 @@ def qualifying(year, race):
             f"http://ergast.com/api/f1/{year}/{race}/qualifying.json?limit=500", timeout=120
         )
         if response.status_code == 200:
-            print("successfully fetched the data")
+            print("qualifying: successfully fetched the data")
         else:
-            print(f"result: there's a {response.status_code} error with your request")
+            print(f"qualifying: there's a {response.status_code} error with your request")
         data = response.json()["MRData"]["RaceTable"]
         return data
 
     except (requests.RequestException, ValueError, KeyError, IndexError):
-        print(f"result: there's a {response.status_code} error with your request")
-        return None
-
-
-def qualifying_default():
-    """API function for returning results of latest race"""
-    try:
-        response = requests.get(
-            "http://ergast.com/api/f1/current/last/qualifying.json?limit=500", timeout=120
-        )
-        if response.status_code == 200:
-            print("successfully fetched the data")
-        else:
-            print(
-                f"result_default: there's a {response.status_code} error with your request"
-            )
-        data = response.json()["MRData"]["RaceTable"]
-        return data
-
-    except (requests.RequestException, ValueError, KeyError, IndexError):
-        print(
-            f"result_default: there's a {response.status_code} error with your request"
-        )
+        print(f"qualifying: there's a {response.status_code} error with your request")
         return None
 
 
@@ -191,7 +193,7 @@ def previous_race():
             timeout=120
         )
         if response.status_code == 200:
-            print("successfully fetched the data")
+            print("previous_race: successfully fetched the data")
 
         data = response.json()
 
@@ -231,7 +233,7 @@ def next_race(number):
             timeout=120
         )
         if response.status_code == 200:
-            print("successfully fetched the data")
+            print(f"next_race + {number}: successfully fetched the data")
         else:
             print(
                 f"next_race: there's a {response.status_code} error with your request"
@@ -265,7 +267,7 @@ def teams_lookup():
             "https://f1connectapi.vercel.app/api/current/teams", timeout=120
         )
         if response.status_code == 200:
-            print("successfully fetched the data")
+            print("teams_lookup: successfully fetched the data")
         else:
             print(
                 f"teams_lookup: there's a {response.status_code} error with your request"
@@ -286,7 +288,7 @@ def drivers_lookup():
             "https://f1connectapi.vercel.app/api/current/drivers", timeout=120
         )
         if response.status_code == 200:
-            print("successfully fetched the data")
+            print("drivers_lookup: successfully fetched the data")
         else:
             print(
                 f"drivers_lookup: there's a {response.status_code} error with your request"
@@ -310,7 +312,7 @@ def drivers_for_team(constructor):
             timeout=120
         )
         if response.status_code == 200:
-            print("successfully fetched the data")
+            print("drivers_for_team: successfully fetched the data")
         else:
             print(
                 f"drivers_for_team: there's a {response.status_code} error with your request"
@@ -334,7 +336,7 @@ def driver_standings():
             timeout=120
         )
         if response.status_code == 200:
-            print("successfully fetched the data")
+            print("driver_standings: successfully fetched the data")
         else:
             print(
                 f"driver_standings: there's a {response.status_code} error with your request"
@@ -358,7 +360,7 @@ def team_standings():
             timeout=120
         )
         if response.status_code == 200:
-            print("successfully fetched the data")
+            print("team_standings: successfully fetched the data")
         else:
             print(
                 f"team_standings: there's a {response.status_code} error with your request"
@@ -382,7 +384,7 @@ def lookup(driver, constructor):
             timeout=120
         )
         if response.status_code == 200:
-            print("successfully fetched the data")
+            print("lookup: successfully fetched the data")
         else:
             print(f"lookup: status code = {response.status_code}")
         return response.json()

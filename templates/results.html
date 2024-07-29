@@ -50,18 +50,19 @@
             </form>
         </div>
         <div class="card-body">
-            {% if qualify.Races %}
-                <h5 class="card-text"> <b>Race:</b> {{ qualify.Races[0].raceName }} </h5>
-                <h5 class="card-text"> <b>Season:</b> {{ qualify.Races[0].season }} </h5>
-                <h5 class="card-text"> <b>Round: </b>{{ qualify.Races[0].round }} </h5>
-                {% if data.Races %}
-                    <img class="logo" src="/static/race_pics/{{data.Races[0].raceName}}.jpg" alt="race pic"><br><br>
+            {% if qualify.races %}
+                <h5 class="card-text"> <b>Race:</b> {{ qualify.races.raceName }} </h5>
+                <h5 class="card-text"> <b>Season:</b> {{ qualify.races.season }} </h5>
+                <h5 class="card-text"> <b>Round: </b>{{ qualify.races.round }} </h5>
+                {% if data.races %}
+                {{data.raceName}}
+                    <img class="logo" src="/static/race_pics/{{data.races.raceName}}.jpg" alt="race pic"><br><br>
                 {% endif %}
             {% endif %}
         </div>
         <div class="card-footer">
-            {% if data.Races %}
-                <a href="{{data.Races[0].url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> More race info from Wikipedia </a>
+            {% if data.races %}
+                <a href="{{data.races.url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> More race info from Wikipedia </a>
             {% endif %}
         </div>
     </div>
@@ -157,14 +158,14 @@
                     </thead>
                     <tbody>
                         {% if qualify_data %}
-                            {% for x in qualify_data %}
+                            {% for x in qualify_data["qualyResults"] %}
                                 <tr>
-                                    <td> {{ x.position }} </td>
-                                    <td> {{ x.Driver.givenName }} {{ x.Driver.familyName }} </td>
-                                    <td id="{{ x.Constructor.name.replace(' ','') }}"> {{ x.Constructor.name }} </td>
-                                    <td> {{ x.Q1 }}</td>
-                                    <td> {{ x.Q2 }}</td>
-                                    <td> {{ x.Q3 }}</td>
+                                    <td> {{ x.Grid_Position }} </td>
+                                    <td> {{ x.driver.name }} {{ x.driver.surname }} </td>
+                                    <td id="{{ x.team.teamId.replace(' ','') }}"> {{ x.team.teamName }} </td>
+                                    <td> {{ x.Q1_Time }}</td>
+                                    <td> {{ x.Q2_Time }}</td>
+                                    <td> {{ x.Q3_Time }}</td>
                                 </tr>
                             {% endfor %}
                         {% endif %}

@@ -4,7 +4,6 @@ differnt routes and templates used by the web app'''
 import os
 import urllib.request
 
-from cs50 import SQL
 from flask import Flask, render_template, request
 from flask_session import Session
 
@@ -35,9 +34,6 @@ app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
-
-# Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///project.db")
 
 # global variables - dictionaries etc - reset at login &
 drivers_and_teams = {}
@@ -270,28 +266,25 @@ def results():
             return render_template("error_message.html", message=message, link=link)
 
         fastest_lap = fastest(year, race_round)  # for getting fastest lap of selected race
-        selected_data = result(year, race_round)  # for getting data for selected race
-        qualify = qualifying(year, race_round)
+        selected_data = result(year, race_round)  # for getting result data for selected race
+        qualify = qualifying(year, race_round)  # for getting qualy data for selected race
 
-        if qualify["Races"]:
-            qualify_data = qualify["Races"][0]["QualifyingResults"]
+        if qualify["races"]:
+            qualify_data = qualify["races"]["qualyResults"]
 
         else:
             qualify = None
             qualify_data = None
 
         if selected_data["Races"]:
-            result_data = selected_data["Races"][0]["Results"]
-            # to pull picture for race
-            wiki_url = selected_data["Races"][0]["Circuit"]["url"]
-            # splits out page title from wiki page for API search
-            wiki_search_title = wiki_url.split("/")[-1]
-            # uses title for API function search tp pull picture
-            url = picture(wiki_search_title)
+            result_data = selected_data["races"]["results"]
+            wiki_url = selected_data["races"]["url"] # to pull picture for race
+            wiki_search_title = wiki_url.split("/")[-1] # splits out page title for API search
+            url = picture(wiki_search_title) # uses title for API function search tp pull picture
             if url:
                 urllib.request.urlretrieve(
                     url,
-                    f'./static/race_pics/{selected_data["Races"][0]["raceName"]}.jpg',
+                    f'./static/race_pics/{selected_data["races"]["raceName"]}.jpg',
                 )
 
         else:
@@ -312,12 +305,9 @@ def results():
     else:
         data = result_default()
 
-        # to pull picture for specific race loaded on page
-        wiki_url = data["races"]["circuit"]["url"]
-        # splits out page title from wiki page for API search
-        wiki_search_title = wiki_url.split("/")[-1]
-        # uses title for API function search tp pull picture
-        url = picture(wiki_search_title)
+        wiki_url = data["races"]["url"] # to pull picture for specific race loaded on page
+        wiki_search_title = wiki_url.split("/")[-1] # splits out page title for API search
+        url = picture(wiki_search_title) # uses title for API function search tp pull picture
         if url:
             urllib.request.urlretrieve(
                 url,
@@ -326,11 +316,10 @@ def results():
 
         current_year = data["season"]
         current_round = previous_race()["round"] # round not included in result default api call
-        # for getting fastest lap of last race
-        fastest_lap = fastest(current_year, current_round)
+        fastest_lap = fastest(current_year, current_round) # for getting fastest lap of last race
         result_data = data["races"]
         qualify = qualifying_default()
-        qualify_data = qualify["Races"][0]["QualifyingResults"]
+        qualify_data = qualify["races"]
 
         return render_template(
             "results.html",
