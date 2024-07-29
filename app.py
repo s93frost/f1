@@ -210,8 +210,7 @@ def constructors():
     # for dictionary of all teams and their drivers in current year
     if not drivers_and_teams:
         for team in teams_dict:
-            team_name = team
-            drivers_and_teams[team_name] = []
+            drivers_and_teams[team] = []
             for driver in drivers_for_team(team):
                 d = driver["driver"]["driverId"]
                 drivers_and_teams[team].append(d)
@@ -233,7 +232,7 @@ def results():
 
     if not seasons_and_names:
         all_seasons = seasons_history()
-        # get list of all seasons being pulled by API (need offset due to size so starts in later year?)
+        # get list of all seasons being pulled by API (need offset?)
         for x in all_seasons:
             # this will need deleting out when all seasons / races available!!!!!!!!!!!!!!!
             if x["year"] == 2024:
@@ -245,7 +244,7 @@ def results():
         for x in all_seasons:
             # this will need deleting out when all seasons / races available!!!!!!!!!!!!!!!
             if x["year"] == 2024:
-                season_races = races(str(x["year"]))
+                season_races = races(x["year"])
                 for r in season_races["races"]:
                     seasons_and_names[int(season_races["season"])].append(r["raceName"])
                     seasons_and_races[int(season_races["season"])].update({r["raceName"]: r["round"]})
@@ -292,6 +291,9 @@ def results():
 
         return render_template(
             "results.html",
+            year = year,
+            racename = racename,
+            race_round = race_round,
             seasons_and_names=seasons_and_names,
             fastest_lap=fastest_lap,
             data=selected_data,
@@ -303,7 +305,6 @@ def results():
     # if not post but get method
     else:
         data = result_default()
-
         wiki_url = data["races"]["url"] # to pull picture for specific race loaded on page
         wiki_search_title = wiki_url.split("/")[-1] # splits out page title for API search
         url = picture(wiki_search_title) # uses title for API function search tp pull picture

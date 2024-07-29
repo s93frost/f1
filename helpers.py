@@ -206,7 +206,7 @@ def previous_race():
             season = int((data)["season"])
             last_season = season - 1
             response2 = requests.get(
-                f"https://f1connectapi.vercel.app/api/{last_season}/22", 
+                f"https://f1connectapi.vercel.app/api/{last_season}/24", 
                 timeout=120
             )
             if response2.status_code == 200:
@@ -246,7 +246,7 @@ def next_race(number):
         current_year = int(data["season"])
         current_round = int((data)["round"])
 
-        if current_round >= 22:
+        if current_round >= 24:
             return False  # return false at end of season for app.py to use
 
         next_round = current_round + number  # takes the last race round and nth number argument
