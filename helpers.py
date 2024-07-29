@@ -124,17 +124,19 @@ def result_default():
         return None
 
 
+# the below has been updated
 def result(year, race):
     """API function for returning results from a specific race by season and race"""
     try:
         response = requests.get(
-            f"http://ergast.com/api/f1/{year}/{race}/results.json?limit=500", timeout=120
+            f"https://f1connectapi.vercel.app/api/{year}/{race}/race", 
+            timeout=120
         )
         if response.status_code == 200:
             print("result: successfully fetched the data")
         else:
             print(f"result: there's a {response.status_code} error with your request")
-        data = response.json()["MRData"]["RaceTable"]
+        data = response.json()
         return data
 
     except (requests.RequestException, ValueError, KeyError, IndexError):
@@ -166,17 +168,18 @@ def qualifying_default():
         return None
 
 
+# the below has been updated
 def qualifying(year, race):
     """API function for returning results from a specific race by season and race"""
     try:
         response = requests.get(
-            f"http://ergast.com/api/f1/{year}/{race}/qualifying.json?limit=500", timeout=120
+            f"https://f1connectapi.vercel.app/api/{year}/{race}/qualy", timeout=120
         )
         if response.status_code == 200:
             print("qualifying: successfully fetched the data")
         else:
             print(f"qualifying: there's a {response.status_code} error with your request")
-        data = response.json()["MRData"]["RaceTable"]
+        data = response.json()
         return data
 
     except (requests.RequestException, ValueError, KeyError, IndexError):

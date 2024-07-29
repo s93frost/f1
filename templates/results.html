@@ -52,8 +52,11 @@
         <div class="card-body">
             {% if qualify.races %}
                 <h5 class="card-text"> <b>Race:</b> {{ qualify.races.raceName }} </h5>
-                <h5 class="card-text"> <b>Season:</b> {{ qualify.races.season }} </h5>
+                <h5 class="card-text"> <b>Season:</b> {{ qualify.season }} </h5>
+                <h5 class="card-text"> <b>Date:</b> {{ qualify.races.date }} </h5>
+                {% if qualify.races.round %}
                 <h5 class="card-text"> <b>Round: </b>{{ qualify.races.round }} </h5>
+                {% endif %}
                 {% if data.races %}
                 {{data.raceName}}
                     <img class="logo" src="/static/race_pics/{{data.races.raceName}}.jpg" alt="race pic"><br><br>

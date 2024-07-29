@@ -233,27 +233,27 @@ def results():
 
     if not seasons_and_names:
         all_seasons = seasons_history()
-        # get list of all seasons being pulled by API (offset due to size so starts in later year)
+        # get list of all seasons being pulled by API (need offset due to size so starts in later year?)
         for x in all_seasons:
             # this will need deleting out when all seasons / races available!!!!!!!!!!!!!!!
             if x["year"] == 2024:
                 # list for the javascript options on results post
-                seasons_and_names[x["championshipId"]] = []
+                seasons_and_names[x["year"]] = []
                 # dict to match names to rounds
-                seasons_and_races[x["championshipId"]] = {}
+                seasons_and_races[x["year"]] = {}
         # to get all the rounds and add them to the season key in the dict
         for x in all_seasons:
             # this will need deleting out when all seasons / races available!!!!!!!!!!!!!!!
             if x["year"] == 2024:
                 season_races = races(str(x["year"]))
                 for r in season_races["races"]:
-                    seasons_and_names[r["championshipId"]].append(r["raceName"])
-                    seasons_and_races[r["championshipId"]].update({r["raceName"]: r["round"]})
+                    seasons_and_names[int(season_races["season"])].append(r["raceName"])
+                    seasons_and_races[int(season_races["season"])].update({r["raceName"]: r["round"]})
 
     if request.method == "POST":
         year = request.form.get("year")
         racename = request.form.get("racename")
-        race_round = seasons_and_races[year][racename]
+        race_round = seasons_and_races[int(year)][racename]
 
         # if no constructor or driver entered on submit or doesnt exist
         if not year:
@@ -269,15 +269,15 @@ def results():
         selected_data = result(year, race_round)  # for getting result data for selected race
         qualify = qualifying(year, race_round)  # for getting qualy data for selected race
 
-        if qualify["races"]:
-            qualify_data = qualify["races"]["qualyResults"]
+        try:
+            qualify_data = qualify["races"]
 
-        else:
+        except (ValueError, KeyError, IndexError):
             qualify = None
             qualify_data = None
 
-        if selected_data["Races"]:
-            result_data = selected_data["races"]["results"]
+        try:
+            result_data = selected_data["races"]
             wiki_url = selected_data["races"]["url"] # to pull picture for race
             wiki_search_title = wiki_url.split("/")[-1] # splits out page title for API search
             url = picture(wiki_search_title) # uses title for API function search tp pull picture
@@ -287,8 +287,7 @@ def results():
                     f'./static/race_pics/{selected_data["races"]["raceName"]}.jpg',
                 )
 
-        else:
-            # if no data from API
+        except (ValueError, KeyError, IndexError):
             result_data = None
 
         return render_template(
