@@ -60,7 +60,7 @@ def fastest(year, race):
 def seasons_history():
     """API function for returning seasons available in API"""
     try:
-        response = requests.get("https://f1connectapi.vercel.app/api/seasons", timeout=120)
+        response = requests.get("https://f1connectapi.vercel.app/api/seasons?limit=100", timeout=120)
         if response.status_code == 200:
             print("seasons_history: successfully fetched the data")
         else:
@@ -82,7 +82,7 @@ def races(year):
     """API function for returning races of a specific season available in API"""
     try:
         response = requests.get(
-            f"https://f1connectapi.vercel.app/api/{year}", timeout=120
+            f"https://f1connectapi.vercel.app/api/{year}?limit=100", timeout=120
         )
         if response.status_code == 200:
             print("races: successfully fetched the data")
@@ -267,7 +267,7 @@ def teams_lookup():
     """API function for returning all teams in current season"""
     try:
         response = requests.get(
-            "https://f1connectapi.vercel.app/api/current/teams", timeout=120
+            "https://f1connectapi.vercel.app/api/current/teams?limit=100", timeout=120
         )
         if response.status_code == 200:
             print("teams_lookup: successfully fetched the data")
@@ -288,7 +288,7 @@ def drivers_lookup():
     """API function for returning all drivers in current season"""
     try:
         response = requests.get(
-            "https://f1connectapi.vercel.app/api/current/drivers", timeout=120
+            "https://f1connectapi.vercel.app/api/current/drivers?limit=100", timeout=120
         )
         if response.status_code == 200:
             print("drivers_lookup: successfully fetched the data")

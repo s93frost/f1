@@ -234,20 +234,17 @@ def results():
         all_seasons = seasons_history()
         # get list of all seasons being pulled by API (need offset?)
         for x in all_seasons:
-            # this will need deleting out when all seasons / races available!!!!!!!!!!!!!!!
-            if x["year"] == 2024:
-                # list for the javascript options on results post
-                seasons_and_names[x["year"]] = []
-                # dict to match names to rounds
-                seasons_and_races[x["year"]] = {}
+            # list for the javascript options on results post
+            seasons_and_names[x["year"]] = []
+            # dict to match names to rounds
+            seasons_and_races[x["year"]] = {}
         # to get all the rounds and add them to the season key in the dict
         for x in all_seasons:
-            # this will need deleting out when all seasons / races available!!!!!!!!!!!!!!!
-            if x["year"] == 2024:
-                season_races = races(x["year"])
-                for r in season_races["races"]:
-                    seasons_and_names[int(season_races["season"])].append(r["raceName"])
-                    seasons_and_races[int(season_races["season"])].update({r["raceName"]: r["round"]})
+            season_races = races(x["year"])
+            for r in season_races["races"]:
+                seasons_and_names[int(season_races["season"])].append(r["raceName"])
+                seasons_and_races[int(season_races["season"])].update({r["raceName"]: r["round"]})
+
 
     if request.method == "POST":
         year = request.form.get("year")

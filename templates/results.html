@@ -30,7 +30,7 @@
 
     <div class="card text-muted mb-3">
         <div class="card-header">
-            <h4 class="page_header"> Formula 1 Results (1975 - present) </h4>
+            <h4 class="page_header"> Formula 1 Results (1950 - present) </h4>
             <form action="/results" method="post">
                 <div class="row justify-content-center">
                     <div class="col-auto">
@@ -65,7 +65,7 @@
                 <h5 class="card-text"> <b>Race:</b> {{ racename }} </h5>
                 <h5 class="card-text"> <b>Season:</b> {{ year }} </h5>
                 <h5 class="card-text"> <b>Round:</b> {{ race_round }} </h5>
-                <h5 class="card-text"><b class="red">No race results available</b></h5>
+                <h5 class="card-text"><b class="red">No qualifying results available</b></h5>
             {% endif %}
         </div>
         <div class="card-footer">
@@ -79,7 +79,7 @@
     <br>
 
     <div class="card bg-light mb-3">
-        <div class="card-header bg-warning text-black"> Fastest Lap </div>
+        <div id="purpleheader" class="card-header"> Fastest Lap </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-sm table-success table-hover">
@@ -104,7 +104,7 @@
 
     <br>
     <div class="card bg-light mb-3">
-        <div class="card-header bg-warning text-black"> Results </div>
+        <div id="purpleheader" class="card-header"> Results </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table id="results" class="table table-sm table-striped table-hover">
@@ -150,7 +150,7 @@
 
     <br>
     <div class="card bg-light mb-3">
-        <div class="card-header bg-warning text-black"> Qualifying Results </div>
+        <div id="purpleheader" class="card-header"> Qualifying Results </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table id="results" class="table table-sm table-striped table-hover">
