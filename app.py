@@ -8,7 +8,6 @@ from flask import Flask, render_template, request
 from flask_session import Session
 
 from helpers import (
-    lookup,
     drivers_lookup,
     teams_lookup,
     drivers_for_team,
@@ -356,10 +355,10 @@ def driver_history():
             team_name = team["teamName"]
             names_dict[team_name] = []
             for driver in drivers_for_team(team["teamId"]):
-                d = driver["name"] + " " + driver["surname"]
+                d = driver["driver"]["name"] + " " + driver["driver"]["surname"]
                 names_dict[team_name].append(d)
 
-    # dict to store vaues of driver ids and names
+    # dict to store values of driver ids and names
     driver_names = {}
     for driver in drivers_dict.values():
         drivername = driver["name"] + " " + driver["surname"]
@@ -368,7 +367,7 @@ def driver_history():
     # dict to store vaues of driver ids and names
     team_names = {}
     for team in teams_dict.values():
-        tname = team["name"]
+        tname = team["teamName"]
         team_names[tname] = team["teamId"]
 
     if request.method == "POST":
@@ -389,21 +388,18 @@ def driver_history():
         # pulls constructor_id for the name selected on form in constructor_name variable
         constructor_id = team_names[constructor_name]
         # my driver and constructor info API function
-        info = lookup(driver_id, constructor_id)
-        seasons = info["MRData"]["SeasonTable"]["Seasons"]
+
 
         return render_template(
             "driver_history.html",
             names_dict=names_dict,
             drivers_name=drivers_name,
-            seasons=seasons,
             constructor_name=constructor_name,
             CURRENT_SEASON=CURRENT_SEASON,
         )
 
     # if method = GET
     else:
-        seasons = ""
         constructor_name = ""
         drivers_name = ""
 
@@ -411,7 +407,6 @@ def driver_history():
             "driver_history.html",
             names_dict=names_dict,
             drivers_name=drivers_name,
-            seasons=seasons,
             constructor_name=constructor_name,
             CURRENT_SEASON=CURRENT_SEASON,
         )

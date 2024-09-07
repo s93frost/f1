@@ -30,7 +30,7 @@
 
     <div class="card mb-3">
         <div class="card-header">
-            <h4 class="page_header"> {{ CURRENT_SEASON }} Drivers: Seasons with Constructor </h4>
+            <h4 class="page_header"> TBD </h4>
         </div>
         <div class="card-body">
             <p> Please select a driver below from the current season </p>
@@ -58,43 +58,5 @@
     </div>
     </div>
 
-    <br>
-    <div class="table-responsive">
-        <table class="table table-sm table-primary table-striped table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>Driver</th>
-                    <th>Constructor</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td> {{ drivers_name }} </td>
-                    <td> {{ constructor_name }} </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <br>
-
-    <div class="table-responsive">
-        <table class="table table-sm table-striped table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>Season</th>
-                    <th>Season info</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for x in seasons %}
-                    <tr>
-                        <td> {{ x.season }} </td>
-                        <td> <a href="{{ x.url }}" target="_blank" rel="noopener noreferrer">{{ x.url }}</a> </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
 
 {% endblock %}
