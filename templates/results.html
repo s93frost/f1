@@ -92,8 +92,8 @@
                     <tbody>
                         <tr>
                             {% if fastest_lap %}
-                                <td> {{ fastest_lap.Results[0].Driver.givenName }} {{ fastest_lap.Results[0].Driver.familyName }}</td>
-                                <td> {{ fastest_lap.Results[0].FastestLap.Time.time }} </td>
+                                <td> {{ fastest_lap["driverId"] }} </td>
+                                <td> {{ fastest_lap["fast_lap"] }} </td>
                             {% endif %}
                         </tr>
                     </tbody>
@@ -115,7 +115,6 @@
                             <th> Team </th>
                             <th> Grid </th>
                             <th> Retired? </th>
-                            <th> Fastest Lap </th>
                             <th> Points </th>
                         </tr>
                     </thead>
@@ -129,10 +128,6 @@
                                     <td> {{ x.grid }} </td>
                                     <td>{% if x.retired != None %}
                                         {{ x.retired }} 
-                                    {% endif %}
-                                    </td>
-                                    <td>{% if x.FastestLap %}
-                                        {{ x.FastestLap.Time.time }}
                                     {% endif %}
                                     </td>
                                     <td> {{ x.points }} </td>

@@ -37,18 +37,19 @@ def track_pic(track):
             f'./static/track_pics/{track["race"][0]["circuit"]["circuitName"]}.jpg',
         )
 
-
+# the below has been updated
 def fastest(year, race):
     """API function for returning fastest driver in specified year and race"""
     try:
         response = requests.get(
-            f"http://ergast.com/api/f1/{year}/{race}/fastest/1/results.json?limit=500", timeout=120
+            f"https://f1connectapi.vercel.app/api/{year}/{race}",
+            timeout=120
         )
         if response.status_code == 200:
             print("fastest: successfully fetched the data")
         else:
             print(f"fastest: there's a {response.status_code} error with your request")
-        data = response.json()["MRData"]["RaceTable"]["Races"][0]
+        data = response.json()["race"][0]["fast_lap"]
         return data
 
     except (requests.RequestException, ValueError, KeyError, IndexError):
