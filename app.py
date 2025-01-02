@@ -308,7 +308,18 @@ def results():
     # if not post but get method
     else:
         current = result_default()
-        data = result(current["season"], current["round"])
+        qualify = qualifying_default()
+
+        # below checks to see if season hasnt been built yet and adds a hardcoded default to show
+        try:
+            data = result(current["season"], current["round"])
+            fastest_lap = fastest(current["season"], current["round"]) # get fastest lap of race
+            qualify = qualifying_default()
+            qualify_data = qualify["races"]
+        except (ValueError, KeyError, IndexError):
+            data = result(2024, 24)
+            fastest_lap = fastest(2024, 24) # get fastest lap of race
+            qualify = qualifying(2024, 24)
 
         wiki_url = data["races"]["url"] # to pull picture for specific race loaded on page
         wiki_search_title = wiki_url.split("/")[-1] # splits out page title for API search
@@ -319,9 +330,7 @@ def results():
                 f'./static/race_pics/{data["races"]["raceName"]}.jpg',
             )
 
-        fastest_lap = fastest(current["season"], current["round"]) # gets fastest lap of last race
         result_data = data["races"]
-        qualify = qualifying_default()
         qualify_data = qualify["races"]
 
         return render_template(
