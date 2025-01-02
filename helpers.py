@@ -106,7 +106,7 @@ def result_default():
     """API function for returning results of latest race"""
     try:
         response = requests.get(
-            "https://f1connectapi.vercel.app/api/current/last/race", 
+            "https://f1connectapi.vercel.app/api/current/last", 
             timeout=120
         )
         if response.status_code == 200:

@@ -8,21 +8,21 @@
 
     <script type="text/javascript">
     // this is for creating the drop down lists from the seasons and racenames variable returned by the API
-    // dependant on which year and races there are
-        var subjectObject = {{ seasons_and_names|safe }}
+    // dependant on which season and races there are
+        var subjectObject = {{ seasons_and_races|safe }}
+
         window.onload = function() {
-            var year = document.getElementById("year");
+            var season = document.getElementById("season");
             var racename = document.getElementById("racename");
             for (var x in subjectObject) {
-                year.options[year.options.length] = new Option(x, x);
+                season.options[season.options.length] = new Option(x, x);
             }
-            year.onchange = function() {
-            //empty driver dropdown
+            season.onchange = function() {
+                //empty dropdown
                 racename.length = 1;
-            //display correct values
-                var z = subjectObject[this.value];
-                for (var i = 0; i < z.length; i++) {
-                    racename.options[racename.options.length] = new Option(z[i], z[i]);
+                //display correct values
+                for (var y in subjectObject[this.value]) {
+                    racename.options[racename.options.length] = new Option(y, y);
                 }
             }
         }
@@ -34,8 +34,8 @@
             <form action="/results" method="post">
                 <div class="row justify-content-center">
                     <div class="col-auto">
-                        <select class="btn btn-warning" required name="year" id="year">
-                            <option disabled selected> Year </option>
+                        <select class="btn btn-warning" required name="season" id="season">
+                            <option disabled selected> Season </option>
                         </select>
                     </div>
                     <div class="col-auto">
@@ -62,7 +62,7 @@
                     <img class="logo" src="/static/race_pics/{{data.races.raceName}}.jpg" alt="race pic"><br><br>
                 {% endif %}
             {% else %}
-                <h5 class="card-text"> <b>Race:</b> {{ racename }} </h5>
+                <h5 class="card-text"> <b>Race:</b> {{ raceName }} </h5>
                 <h5 class="card-text"> <b>Season:</b> {{ year }} </h5>
                 <h5 class="card-text"> <b>Round:</b> {{ race_round }} </h5>
                 <h5 class="card-text"><b class="red">No qualifying results available</b></h5>
@@ -92,7 +92,7 @@
                     <tbody>
                         <tr>
                             {% if fastest_lap %}
-                                <td> {{ fastest_lap["driverId"] }} </td>
+                                <td> {{ fastest_lap["fast_lap_driver_id"] }} </td>
                                 <td> {{ fastest_lap["fast_lap"] }} </td>
                             {% endif %}
                         </tr>
