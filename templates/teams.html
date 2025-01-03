@@ -22,26 +22,26 @@
         {% for x in team_standing %}
             <div class="col mb-5">
                 <div class="card bg-light mb-3">
-                    <div class="constructor_header" id="{{ x.team.teamId.replace(' ','') }}">
+                    <div class="constructor_header" id="{{ x.teamId.replace(' ','') }}">
                         <h4> {{ x.position }} </h4>
                         <h5>
                             <p class="card-text"> {{ x.points }} Pts</p>
                         </h5>
                     </div>
                     <div class="card-body" id="team-card">
-                        <h5 class="constructor" id="{{ x.team.teamId.replace(' ','') }}"> {{ x.team.teamName }} </h5>
+                        <h5 class="constructor" id="{{ x.teamId.replace(' ','') }}"> {{ x.team.teamName }} </h5>
                         <p class="card-text"> Nationality: {{ x.team.country}} </p>
                         <p class="card-text"> Wins: {{ x.wins }} </p>
                         <div style="height: 130px;">
-                            <img class="team_logo" src="/static/team_pics/{{x.team.teamId}}.jpg" alt="{{x.team.teamId}}" style="height:100px; width: auto">
+                            <img class="team_logo" src="/static/team_pics/{{x.teamId}}.jpg" alt="{{x.teamId}}" style="height:100px; width: auto">
                         </div>
                         <div>
                             <a href="{{x.team.url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> More team info from Wikipedia </a>
                         </div>
                     </div>
 
-                    <div class="constructor_header" id="{{ x.team.teamId.replace(' ','') }}">
-                        {% for x in drivers_and_teams[x.team.teamId] %}
+                    <div class="constructor_header" id="{{ x.teamId.replace(' ','') }}">
+                        {% for x in drivers_and_teams[x.teamId] %}
                             <h5> {{ drivers_dict[x].name }} <br> {{ drivers_dict[x].surname }} </h5>
                         {% endfor %}
                     </div>
