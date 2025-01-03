@@ -123,7 +123,7 @@
                             <th> Driver </th>
                             <th> Team </th>
                             <th> Grid </th>
-                            <th> Retired? </th>
+                            <th> Time </th>
                             <th> Points </th>
                         </tr>
                     </thead>
@@ -135,10 +135,7 @@
                                     <td> {{ x.driver.name }} {{ x.driver.surname }} </td>
                                     <td id="{{ x.team.teamId.replace(' ','') }}"> {{ x.team.teamName }} </td>
                                     <td> {{ x.grid }} </td>
-                                    <td>{% if x.retired != None %}
-                                        {{ x.retired }} 
-                                    {% endif %}
-                                    </td>
+                                    <td> {{ x.time }} </td>
                                     <td> {{ x.points }} </td>
                                 </tr>
                             {% endfor %}
