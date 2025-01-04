@@ -37,7 +37,7 @@ def track_pic(track):
             f'./static/track_pics/{track["race"][0]["circuit"]["circuitName"]}.jpg',
         )
 
-# the below has been updated
+
 def fastest(year, race):
     """API function for returning fastest driver in specified year and race"""
     try:
@@ -57,7 +57,6 @@ def fastest(year, race):
         return None
 
 
-# the below has been updated
 def seasons_history():
     """API function for returning seasons available in API"""
     try:
@@ -78,7 +77,6 @@ def seasons_history():
         return None
 
 
-# the below has been updated
 def races(year):
     """API function for returning races of a specific season available in API"""
     try:
@@ -101,7 +99,6 @@ def races(year):
         return None
 
 
-# the below has been updated
 def result_default():
     """API function for returning results of latest race"""
     try:
@@ -125,7 +122,6 @@ def result_default():
         return None
 
 
-# the below has been updated
 def result(year, race):
     """API function for returning results from a specific race by season and race"""
     try:
@@ -145,7 +141,6 @@ def result(year, race):
         return None
 
 
-# the below has been updated
 def qualifying_default():
     """API function for returning results of latest race"""
     try:
@@ -169,7 +164,6 @@ def qualifying_default():
         return None
 
 
-# the below has been updated
 def qualifying(year, race):
     """API function for returning results from a specific race by season and race"""
     try:
@@ -188,7 +182,6 @@ def qualifying(year, race):
         return None
 
 
-# the below has been updated
 def previous_race():
     """API function for returning previous race before the most recent"""
     try:
@@ -227,7 +220,6 @@ def previous_race():
         return None
 
 
-# the below has been updated
 def next_race(number):
     """API function for returning nth next race from the last 
     (increments e.g 1 is next, 2 is the second race from now etc)"""
@@ -263,7 +255,6 @@ def next_race(number):
         return None
 
 
-# the below has been updated
 def teams_lookup():
     """API function for returning all teams in current season"""
     try:
@@ -284,7 +275,6 @@ def teams_lookup():
         return None
 
 
-# the below has been updated
 def drivers_lookup():
     """API function for returning all drivers in current season"""
     try:
@@ -306,8 +296,28 @@ def drivers_lookup():
         )
         return None
 
+def drivers_all_years():
+    """API function for returning all drivers in all seasons"""
+    try:
+        response = requests.get(
+            "https://f1connectapi.vercel.app/api/drivers?limit=1000", timeout=120
+        )
+        if response.status_code == 200:
+            print("drivers_lookup: successfully fetched the data")
+        else:
+            print(
+                f"drivers_lookup: there's a {response.status_code} error with your request"
+            )
+        data = response.json()
+        return (data)["drivers"]
 
-# the below has been updated
+    except (requests.RequestException, ValueError, KeyError, IndexError):
+        print(
+            f"drivers_lookup: there's a {response.status_code} error with your request"
+        )
+        return None
+
+
 def drivers_for_team(constructor):
     """API function for returning the drivers for a specific team"""
     try:
@@ -331,7 +341,6 @@ def drivers_for_team(constructor):
         return None
 
 
-# the below has been updated
 def driver_standings():
     """API function for returning the drivers based on championship standing"""
     try:
@@ -355,7 +364,6 @@ def driver_standings():
         return None
 
 
-# the below has been updated
 def team_standings():
     """API function for returning the teams based on championship standing"""
     try:

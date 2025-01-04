@@ -24,6 +24,7 @@ from helpers import (
     qualifying,
     qualifying_default,
     races,
+    drivers_all_years,
 )
 
 # Configure application
@@ -244,6 +245,13 @@ def results():
                     seasons_and_races[int(year_races["season"])].update({r["raceName"]: r["round"]})
 
 
+    # for dict of all drivers in all years
+    all_drivers_dict = {}
+    if not all_drivers_dict:
+        all_drivers = drivers_all_years()
+        for driver in all_drivers:
+            all_drivers_dict[driver["driverId"]] = driver
+
     if request.method == "POST":
         year = request.form.get("season")
         racename = request.form.get("racename")
@@ -270,6 +278,11 @@ def results():
         fastest_lap = fastest(year, race_round)  # for getting fastest lap of selected race
         selected_data = result(year, race_round)  # for getting result data for selected race
         qualify = qualifying(year, race_round)  # for getting qualy data for selected race
+
+        # to check if dict contains any None values which would break results HTML
+        if fastest_lap["fast_lap_driver_id"] is None:
+            #set entire dict to None so logic in results.html can skip
+            fastest_lap = None
 
         try:
             qualify_data = qualify["races"]
@@ -303,6 +316,7 @@ def results():
             result_data=result_data,
             qualify=qualify,
             qualify_data=qualify_data,
+            all_drivers_dict=all_drivers_dict,
         )
 
     # if not post but get method
@@ -320,6 +334,11 @@ def results():
             data = result(2024, 24)
             fastest_lap = fastest(2024, 24) # get fastest lap of race
             qualify = qualifying(2024, 24)
+
+        # to check if dict contains any None values which would break results HTML
+        if fastest_lap["fast_lap_driver_id"] is None:
+            #set entire dict to None so logic in results.html can skip
+            fastest_lap = None
 
         wiki_url = data["races"]["url"] # to pull picture for specific race loaded on page
         wiki_search_title = wiki_url.split("/")[-1] # splits out page title for API search
@@ -341,6 +360,7 @@ def results():
             result_data=result_data,
             qualify_data=qualify_data,
             qualify=qualify,
+            all_drivers_dict=all_drivers_dict,
         )
 
 

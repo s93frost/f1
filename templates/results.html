@@ -83,35 +83,36 @@
             {% endif %}
         </div>
     </div>
-    </div>
 
-    <br>
-
-    <div class="card bg-light mb-3">
-        <div id="purpleheader" class="card-header"> Fastest Lap </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-sm table-success table-hover">
-                    <thead class="table-dark">
-                        <tr>
-                            <th> Driver Name </th>
-                            <th> Lap Time </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            {% if fastest_lap %}
-                                <td> {{ fastest_lap["fast_lap_driver_id"] }} </td>
-                                <td> {{ fastest_lap["fast_lap"] }} </td>
-                            {% endif %}
-                        </tr>
-                    </tbody>
-                </table>
+    {% if fastest_lap %}
+        <br>
+        <div class="card bg-light mb-3">
+            <div id="purpleheader" class="card-header"> 
+                Fastest Lap 
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-success table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th> Driver Name </th>
+                                <th> Lap Time </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{ all_drivers_dict[fastest_lap.fast_lap_driver_id].name }} {{ all_drivers_dict[fastest_lap.fast_lap_driver_id].surname }} </td>
+                                <td> {{ fastest_lap.fast_lap }} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 
     <br>
+    
     <div class="card bg-light mb-3">
         <div id="purpleheader" class="card-header"> Results </div>
         <div class="card-body">
