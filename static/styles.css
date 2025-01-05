@@ -253,7 +253,11 @@ td:hover {
     color: white;
 }
 
-#purpleheader{
+#purpleheader {
     background-color: #6e40c9;
     color: white;
+}
+
+#curved-border {
+    border-radius:3px;
 }

@@ -5,7 +5,7 @@ import requests
 
 def picture(wiki_search_title):
     """MediaWiki API for returning main page image of an article - 
-    used in conjuction with URL received from ergast API"""
+    used in conjuction with URL received from API"""
     try:
         url = f"https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&prop=pageimages|pageterms&piprop=thumbnail&pithumbsize=600&titles={wiki_search_title}&redirects=&pilicense=any"
         headers = {
@@ -103,7 +103,7 @@ def result_default():
     """API function for returning results of latest race"""
     try:
         response = requests.get(
-            "https://f1connectapi.vercel.app/api/current/last", 
+            "https://f1connectapi.vercel.app/api/current/last/race", 
             timeout=120
         )
         if response.status_code == 200:
@@ -303,17 +303,17 @@ def drivers_all_years():
             "https://f1connectapi.vercel.app/api/drivers?limit=1000", timeout=120
         )
         if response.status_code == 200:
-            print("drivers_lookup: successfully fetched the data")
+            print("drivers_all_years: successfully fetched the data")
         else:
             print(
-                f"drivers_lookup: there's a {response.status_code} error with your request"
+                f"drivers_all_years: there's a {response.status_code} error with your request"
             )
         data = response.json()
         return (data)["drivers"]
 
     except (requests.RequestException, ValueError, KeyError, IndexError):
         print(
-            f"drivers_lookup: there's a {response.status_code} error with your request"
+            f"drivers_all_years: there's a {response.status_code} error with your request"
         )
         return None
 
@@ -322,7 +322,7 @@ def drivers_for_team(constructor):
     """API function for returning the drivers for a specific team"""
     try:
         response = requests.get(
-            f"https://f1connectapi.vercel.app/api/current/teams/{constructor}/drivers", 
+            f"https://f1connectapi.vercel.app/api/current/teams/{constructor}/drivers",
             timeout=120
         )
         if response.status_code == 200:
@@ -364,6 +364,29 @@ def driver_standings():
         return None
 
 
+def driver_standings_year(year):
+    """API function for returning the drivers based on championship standing"""
+    try:
+        response = requests.get(
+            f"https://f1connectapi.vercel.app/api/{year}/drivers-championship", 
+            timeout=120
+        )
+        if response.status_code == 200:
+            print("driver_standings_year: successfully fetched the data")
+        else:
+            print(
+                f"driver_standings_year: there's a {response.status_code} error with your request"
+            )
+        data = response.json()
+        return data['drivers_championship']
+
+    except (requests.RequestException, ValueError, KeyError, IndexError):
+        print(
+            f"driver_standings_year: there's a {response.status_code} error with your request"
+        )
+        return None
+
+
 def team_standings():
     """API function for returning the teams based on championship standing"""
     try:
@@ -378,7 +401,7 @@ def team_standings():
                 f"team_standings: there's a {response.status_code} error with your request"
             )
         data = response.json()
-        return (data)["constructors_championship"]
+        return data
 
     except (requests.RequestException, ValueError, KeyError, IndexError):
         print(
@@ -387,20 +410,24 @@ def team_standings():
         return None
 
 
-def lookup(driver, constructor):
-    """API lookup for returning the different seasons a 
-    certain driver has been with a certain team"""
+def team_standings_year(year):
+    """API function for returning the teams based on championship standing"""
     try:
         response = requests.get(
-            f"http://ergast.com/api/f1/drivers/{driver}/constructors/{constructor}/seasons.json",
+            f"https://f1connectapi.vercel.app/api/{year}/constructors-championship",
             timeout=120
         )
         if response.status_code == 200:
-            print("lookup: successfully fetched the data")
+            print("team_standings_year: successfully fetched the data")
         else:
-            print(f"lookup: status code = {response.status_code}")
-        return response.json()
+            print(
+                f"team_standings_year: there's a {response.status_code} error with your request"
+            )
+        data = response.json()
+        return (data)["constructors_championship"]
 
     except (requests.RequestException, ValueError, KeyError, IndexError):
-        print(f"lookup: there's a {response.status_code} error with your request")
+        print(
+            f"team_standings_year: there's a {response.status_code} error with your request"
+        )
         return None

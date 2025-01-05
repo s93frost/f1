@@ -1,0 +1,124 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Season History
+{% endblock %}
+
+{% block main %}
+
+    <script type="text/javascript">
+    // this is the javascript for creating the year dropdown
+    // passes in seasons_and_races dictionary for lists of years
+        var subjectObject = {{ seasons|safe }}
+        window.onload = function() {
+            var season = document.getElementById("season");
+            for (var x in subjectObject) {
+                season.options[season.options.length] = new Option(x, x);
+            }
+        }
+    </script>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <h4 class="page_header"> Season History </h4>
+        </div>
+        <div class="card-body">
+            Please select a year from the dropdown below
+        </div>
+        <div class="card-footer">
+            <form action="/season_history" method="post">
+                <div class="row justify-content-center">
+                    <div class="col-auto">
+                        <select class="btn btn-warning" required name="season" id="season">
+                            <option disabled selected>Season</option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row gx-4 gx-lg-4 row-cols-2 row-cols-md-3 row-cols-xl-3 justify-content-center">
+        {% if team_standing_year == None %}
+            <div class="col-sm-6">
+                <div class="card bg-light">
+                    <div id="purpleheader" class="card-header">
+                        <h5> {{ season }} Constructor Champion </h5>
+                    </div>
+                    <div class="card-body" id="team-card">
+                        <p class="text-danger"> No Constructor Points recorded in this season</p>
+                    </div>
+                </div>
+            </div>
+        {% elif team_standing_year[0].points == None %}
+            <div class="col-sm-6">
+                <div class="card bg-light">
+                    <div id="purpleheader" class="card-header">
+                        <h5> {{ season }} Constructor Champion </h5>
+                    </div>
+                    <div class="card-body" id="team-card">
+                        <p class="text-danger"> No Constructor Points recorded in this season</p>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-sm-6">
+                <div class="card bg-light mb-3">
+                    <div id="purpleheader" class="card-header">
+                        <h5> {{ season }} Constructor Champion </h5>
+                    </div>
+                    <div class="card-body" id="team-card">
+                        <h5> {{ team_standing_year[0].team.teamName }} </h5>
+                        <p class="card-text"> Wins: {{ team_standing_year[0].wins }} </p>
+                        <p class="card-text"> Points: {{ team_standing_year[0].points }} </p>
+                        <p class="card-text"> Nationality: {{ team_standing_year[0].team.country }} </p>
+                    </div>
+                    <div class="card-footer" >
+                        <a href="{{team_standing_year[0].team.url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> More team info from Wikipedia </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if driver_standing_year == None %}
+            <div class="card bg-light">
+                <div id="purpleheader" class="card-header">
+                    <h5> {{ season }} Driver Champion </h5>
+                </div>
+                <div class="card-body" id="team-card">
+                    <p class="text-danger"> No Driver Points recorded in this season</p4>
+                </div>
+            </div>
+        {% elif driver_standing_year[0].points == None %}
+            <div class="card bg-light">
+                <div id="purpleheader" class="card-header">
+                    <h5> {{ season }} Driver Champion </h5>
+                </div>
+                <div class="card-body" id="team-card">
+                    <p class="text-danger"> No Driver Points recorded yet this season</p>
+                </div>
+            </div>
+        {% else %}
+            <div class="col mb-5">
+                <div class="card bg-light mb-3">
+                    <div id="purpleheader" class="card-header">
+                        <h5> {{ season }} Driver Champion </h5>
+                    </div>
+                    <div class="card-body" id="team-card">
+                        <h5> {{ driver_standing_year.0.driver.name }} {{ driver_standing_year.0.driver.surname }} </h5>
+                        <p class="card-text"> Wins: {{ driver_standing_year.0.wins }} </p>
+                        <p class="card-text"> Points: {{ driver_standing_year.0.points }} </p>
+                        <p class="card-text"> Nationality: {{ driver_standing_year.0.driver.nationality }} </p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{driver_standing_year.0.driver.url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> More team info from Wikipedia </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}

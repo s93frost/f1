@@ -10,7 +10,6 @@
     // this is for creating the drop down lists from the seasons and racenames variable returned by the API
     // dependant on which season and races there are
         var subjectObject = {{ seasons_and_races|safe }}
-
         window.onload = function() {
             var season = document.getElementById("season");
             var racename = document.getElementById("racename");
@@ -171,7 +170,7 @@
                                     <td> {{ x.driver.name }} {{ x.driver.surname }} </td>
                                     <td id="{{ x.team.teamId.replace(' ','') }}"> {{ x.team.teamName }} </td>
                                     <td> {{ x.q1 }}</td>
-                                    <td> {{ x.q1 }}</td>
+                                    <td> {{ x.q2 }}</td>
                                     <td> {{ x.q3 }}</td>
                                 </tr>
                             {% endfor %}
