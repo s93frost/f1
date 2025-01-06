@@ -41,12 +41,30 @@
         </div>
     </div>
 
+    
+    {% if season_data %}
+    <h1 class="">
+        {{ season_data.championship.championshipName }}
+    </h1>
+
+    <div class="card-footer" >
+        <a href="{{ season_data.championship.url }}" class="btn btn-info" target="_blank" rel="noopener noreferrer"> More season info from Wikipedia </a>
+    </div>
+
+    {% else %}
+
+        <h1> {{ season }} </h1>
+
+    {% endif %}
+    
+    <br>
+
     <div class="row gx-4 gx-lg-4 row-cols-2 row-cols-md-3 row-cols-xl-3 justify-content-center">
         {% if team_standing_year == None %}
             <div class="col-sm-6">
                 <div class="card bg-light">
                     <div id="purpleheader" class="card-header">
-                        <h5> {{ season }} Constructor Champion </h5>
+                        <h5> Constructor Champion </h5>
                     </div>
                     <div class="card-body" id="team-card">
                         <p class="text-danger"> No Constructor Points recorded in this season</p>
@@ -57,7 +75,7 @@
             <div class="col-sm-6">
                 <div class="card bg-light">
                     <div id="purpleheader" class="card-header">
-                        <h5> {{ season }} Constructor Champion </h5>
+                        <h5> Constructor Champion </h5>
                     </div>
                     <div class="card-body" id="team-card">
                         <p class="text-danger"> No Constructor Points recorded in this season</p>
@@ -68,7 +86,7 @@
             <div class="col-sm-6">
                 <div class="card bg-light mb-3">
                     <div id="purpleheader" class="card-header">
-                        <h5> {{ season }} Constructor Champion </h5>
+                        <h5> Constructor Champion </h5>
                     </div>
                     <div class="card-body" id="team-card">
                         <h5> {{ team_standing_year[0].team.teamName }} </h5>
@@ -85,8 +103,8 @@
 
         {% if driver_standing_year == None %}
             <div class="card bg-light">
-                <div id="purpleheader" class="card-header">
-                    <h5> {{ season }} Driver Champion </h5>
+                <div id="coralheader" class="card-header">
+                    <h5> Driver Champion </h5>
                 </div>
                 <div class="card-body" id="team-card">
                     <p class="text-danger"> No Driver Points recorded in this season</p4>
@@ -94,8 +112,8 @@
             </div>
         {% elif driver_standing_year[0].points == None %}
             <div class="card bg-light">
-                <div id="purpleheader" class="card-header">
-                    <h5> {{ season }} Driver Champion </h5>
+                <div id="coralheader" class="card-header">
+                    <h5> Driver Champion </h5>
                 </div>
                 <div class="card-body" id="team-card">
                     <p class="text-danger"> No Driver Points recorded yet this season</p>
@@ -104,8 +122,8 @@
         {% else %}
             <div class="col mb-5">
                 <div class="card bg-light mb-3">
-                    <div id="purpleheader" class="card-header">
-                        <h5> {{ season }} Driver Champion </h5>
+                    <div id="coralheader" class="card-header">
+                        <h5> Driver Champion </h5>
                     </div>
                     <div class="card-body" id="team-card">
                         <h5> {{ driver_standing_year.0.driver.name }} {{ driver_standing_year.0.driver.surname }} </h5>
@@ -114,7 +132,7 @@
                         <p class="card-text"> Nationality: {{ driver_standing_year.0.driver.nationality }} </p>
                     </div>
                     <div class="card-footer">
-                        <a href="{{driver_standing_year.0.driver.url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> More team info from Wikipedia </a>
+                        <a href="{{driver_standing_year.0.driver.url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> More driver info from Wikipedia </a>
                     </div>
                 </div>
             </div>

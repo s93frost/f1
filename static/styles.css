@@ -258,6 +258,11 @@ td:hover {
     color: white;
 }
 
+#coralheader {
+    background-color: #31D843;
+    color: white;
+}
+
 #curved-border {
     border-radius:3px;
 }

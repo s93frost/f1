@@ -1,5 +1,5 @@
 ''' This file is the application file serving the python logic for 
-differnt routes and templates used by the web app'''
+different routes and templates used by the web app'''
 
 import os
 import urllib.request
@@ -169,7 +169,9 @@ def drivers():
     driver_standing = driver_standings()
 
     return render_template(
-        "drivers.html", driver_standing=driver_standing, CURRENT_SEASON=CURRENT_SEASON
+        "drivers.html",
+        driver_standing=driver_standing,
+        CURRENT_SEASON=CURRENT_SEASON
     )
 
 
@@ -388,9 +390,6 @@ def season_history():
     for x in all_seasons:
         seasons[x["year"]] = x["year"]
 
-    global CURRENT_SEASON
-    if not CURRENT_SEASON:
-        CURRENT_SEASON = team_standings()["season"]
 
     if request.method == "POST":
         selected_season = request.form.get("season")
@@ -402,6 +401,7 @@ def season_history():
 
         team_standing_year = team_standings_year(selected_season)
         driver_standing_year = driver_standings_year(selected_season)
+        season_data = races(selected_season)
 
         return render_template(
             "season_history.html",
@@ -409,10 +409,17 @@ def season_history():
             seasons=seasons,
             team_standing_year=team_standing_year,
             driver_standing_year=driver_standing_year,
+            season_data=season_data,
         )
 
     # if method = GET
     else:
+
+        season_data = previous_race()
+
+        global CURRENT_SEASON
+        if not CURRENT_SEASON:
+            CURRENT_SEASON = season_data["season"]
 
         team_standing_year = team_standings_year(CURRENT_SEASON)
         driver_standing_year = driver_standings_year(CURRENT_SEASON)
@@ -423,4 +430,5 @@ def season_history():
             seasons=seasons,
             team_standing_year=team_standing_year,
             driver_standing_year=driver_standing_year,
+            season_data=season_data,
         )

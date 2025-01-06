@@ -60,7 +60,7 @@ def fastest(year, race):
 def seasons_history():
     """API function for returning seasons available in API"""
     try:
-        response = requests.get("https://f1connectapi.vercel.app/api/seasons?limit=99", timeout=120)
+        response = requests.get("https://f1connectapi.vercel.app/api/seasons?limit=100", timeout=120)
         if response.status_code == 200:
             print("seasons_history: successfully fetched the data")
         else:
@@ -419,10 +419,7 @@ def team_standings_year(year):
         )
         if response.status_code == 200:
             print("team_standings_year: successfully fetched the data")
-        else:
-            print(
-                f"team_standings_year: there's a {response.status_code} error with your request"
-            )
+
         data = response.json()
         return (data)["constructors_championship"]
 
