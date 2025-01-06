@@ -48,6 +48,7 @@ teams_dict = {}
 names_dict = {}
 TEAM_PICS = False
 CURRENT_SEASON = ""
+all_drivers_dict = {}
 # dict of seasons + race_name - not used anymore but kept to prompt line 234
 SEASONS_AND_NAMES = False
 # dict for storing seasons, race_names + rounds for javascript options on results post
@@ -238,7 +239,6 @@ def results():
         SEASONS_AND_NAMES = True
 
     # for dict of all drivers in all years
-    all_drivers_dict = {}
     if not all_drivers_dict:
         all_drivers = drivers_all_years()
         for driver in all_drivers:
