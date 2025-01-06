@@ -100,15 +100,6 @@ def index():
         ):
             track_pic(next_plus_one)
 
-
-    # dict of teams in currrent year - preloads so wait time isn't  long on /drivers route
-    if not teams_dict:
-        global teams  # global can be used by render template once self and teams_dict already made
-        teams = teams_lookup()
-        for team in teams:
-            name = team["teamId"]
-            teams_dict[name] = team
-
     return render_template(
         "index.html",
         next_r=next_r,
@@ -137,15 +128,6 @@ def drivers():
         drivers = drivers_lookup()
         for driver in drivers:
             drivers_dict[driver["driverId"]] = driver
-
-    # for dictionary of all teams and their drivers in current year
-    if not drivers_and_teams:
-        for team in teams_dict:
-            team_name = team
-            drivers_and_teams[team_name] = []
-            for driver in drivers_for_team(team):
-                d = driver["driver"]["driverId"]
-                drivers_and_teams[team].append(d)
 
     # to pull all pictures for drivers from their wikipedia url if file not already exists
     for x in drivers_dict.values():

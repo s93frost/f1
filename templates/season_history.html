@@ -41,14 +41,13 @@
         </div>
     </div>
 
-    
     {% if season_data %}
     <h1 class="">
         {{ season_data.championship.championshipName }}
     </h1>
 
     <div class="card-footer" >
-        <a href="{{ season_data.championship.url }}" class="btn btn-info" target="_blank" rel="noopener noreferrer"> More season info from Wikipedia </a>
+        <a href="{{ season_data.championship.url }}" class="btn btn-danger" target="_blank" rel="noopener noreferrer"> More season info from Wikipedia </a>
     </div>
 
     {% else %}
