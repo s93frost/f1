@@ -93,7 +93,6 @@ body {
     justify-content: center
 }
 
-
 #team-card:hover {
     background-color: black;
     color: white;
@@ -103,7 +102,6 @@ body {
     background-color: white;
     color: black;
 }
-
 
 .next_race {
     width: 80%;
@@ -139,7 +137,7 @@ body {
 }
 
 .logo {
-    width: 30%;
+    width: 25%;
     height: auto;
     padding: 5px;
 }
@@ -151,7 +149,7 @@ body {
 }
 
 .index_logo {
-    width: 60%;
+    width: 25%;
     height: auto;
     padding: 5px;
 }
