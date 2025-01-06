@@ -48,12 +48,8 @@
                         </div>
                         <div class="card-footer text-muted">
                             <div>
-                                <iframe id="myMap" width="250" height="200" frameborder="0" src="https://www.bing.com/maps/embed?h=200&w=250&cp={{ last_race }}~{{ last_race }}&lvl=5&typ=d&sty=r&src=SHELL&FORM=MBEDV8" scrolling="no">
-                                </iframe>
+                                <iframe class="map_logo" id="myMap" width="400" height="300" src="https://maps.google.com/maps?q={{last_race.race.0.circuit.circuitName}}&t=k&z=5&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
                             </div>
-                        </div>
-                        <div>
-                            <a id="largeMapLink" target="_blank" href="https://www.bing.com/maps?cp={{ last_race }}~{{ last_race }}&amp;sty=r&amp;lvl=5&amp;FORM=MBEDLD">View Larger Map</a> &nbsp; | &nbsp;
                         </div>
                     </div>
                 {% endif %}
@@ -71,12 +67,8 @@
                         </div>
                         <div class="card-footer text-muted">
                             <div>
-                                <iframe id="myMap" width="250" height="200" frameborder="0" src="https://www.bing.com/maps/embed?h=200&w=250&cp={{ next_r }}~{{ next_r }}&lvl=5&typ=d&sty=r &src=SHELL&FORM=MBEDV8" scrolling="no">
-                                </iframe>
+                                <iframe class="map_logo" id="myMap" width="400" height="300" src="https://maps.google.com/maps?q={{next_r.race.0.circuit.circuitName}}&t=k&z=5&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
                             </div>
-                        </div>
-                        <div>
-                            <a id="largeMapLink" target="_blank" href="https://www.bing.com/maps?cp={{ next_r }}~{{ next_r }}&amp;sty=r&amp;lvl=5&amp;FORM=MBEDLD">View Larger Map</a> &nbsp; | &nbsp;
                         </div>
                     </div>
                 {% else %}
@@ -98,12 +90,8 @@
                         </div>
                         <div class="card-footer text-muted">
                             <div>
-                                <iframe id="myMap" width="250" height="200" frameborder="0" src="https://www.bing.com/maps/embed?h=200&w=250&cp={{ next_plus_one }}~{{ next_plus_one }}&lvl=5&typ=d&sty=r&src=SHELL&FORM=MBEDV8" scrolling="no">
-                                </iframe>
+                                <iframe class="map_logo" id="myMap" width="400" height="300" src="https://maps.google.com/maps?q={{next_plus_one.race.0.circuit.circuitName}}&t=k&z=5&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
                             </div>
-                        </div>
-                        <div>
-                            <a id="largeMapLink" target="_blank" href="https://www.bing.com/maps?cp={{ next_plus_one }}~{{ next_plus_one }}&amp;sty=r&amp;lvl=5&amp;FORM=MBEDLD">View Larger Map</a> &nbsp; | &nbsp;
                         </div>
                     </div>
                 {% endif %}
