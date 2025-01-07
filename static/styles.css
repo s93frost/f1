@@ -160,6 +160,11 @@ body {
     padding: 5px;
 }
 
+.map_logo {
+    width: 100%;
+    height: auto;
+}
+
 tr:hover,
 td:hover {
     background-color: coral !important;
