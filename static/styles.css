@@ -144,7 +144,7 @@ body {
 
 .team_logo {
     width: auto;
-    height: 35px;
+    height: 80px;
     padding: 5px;
 }
 
@@ -166,7 +166,8 @@ td:hover {
 }
 
 .driver_header {
-    border-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
     padding: 5px;
     display: inline-block;
     vertical-align: middle;
@@ -182,7 +183,21 @@ td:hover {
 }
 
 .constructor_header {
-    border-radius: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-color: white;
+    padding: 5px;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 25px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.constructor_footer {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-color: white;
     padding: 5px;
     display: inline-block;
     vertical-align: middle;
@@ -263,4 +278,6 @@ td:hover {
 
 #curved-border {
     border-radius:3px;
+    border-color: white;
+    border-width: medium;
 }
