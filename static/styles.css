@@ -199,17 +199,6 @@ td:hover {
     justify-content: space-between;
 }
 
-.constructor_footer {
-    border-bottom-left-radius: 3px;
-    border-bottom-right-radius: 3px;
-    border-color: white;
-    padding: 5px;
-    display: inline-block;
-    vertical-align: middle;
-    line-height: 25px;
-    display: flex;
-    justify-content: space-between;
-}
 
 #ferrari {
     background-color: #EF1A2D;
@@ -286,3 +275,32 @@ td:hover {
     border-color: white;
     border-width: medium;
 }
+
+@media screen and (min-width: 575px) {
+    
+    .constructor_footer {
+        border-bottom-left-radius: 3px;
+        border-bottom-right-radius: 3px;
+        border-color: white;
+        padding: 5px;
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 25px;
+        display: flex;
+        justify-content: space-between;
+    }
+  }
+
+  @media screen and (max-width: 575px) {
+    
+    .constructor_driver {
+        padding-top: 4%;
+    }
+  }
+
+  @media screen and (min-width: 575px) {
+    
+    .constructor_driver {
+        padding-top: 1%;
+    }
+  }

@@ -38,9 +38,9 @@
                         </div>
                     </div>
                     <div class="constructor_footer" id="{{ x.teamId.replace(' ','') }}">
-                        {% for x in drivers_and_teams[x.teamId] %}
-                            <h5> {{ drivers_dict[x].name }} <br> {{ drivers_dict[x].surname }} </h5>
-                        {% endfor %}
+                            {% for x in drivers_and_teams[x.teamId] %}
+                                <h6 class="constructor_driver"> {{ drivers_dict[x].name }} {{ drivers_dict[x].surname }} </h6>
+                            {% endfor %}
                     </div>
                 </div>
             </div>
