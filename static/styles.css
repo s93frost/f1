@@ -265,7 +265,7 @@ td:hover {
     color: white;
 }
 
-#coralheader {
+#season_histroy_driver_header {
     background-color: #008EE6;
     color: white;
 }
@@ -276,6 +276,7 @@ td:hover {
     border-width: medium;
 }
 
+/* If larger device */
 @media screen and (min-width: 575px) {
     
     .constructor_footer {
@@ -291,6 +292,7 @@ td:hover {
     }
   }
 
+  /* If mobile device */
   @media screen and (max-width: 575px) {
     
     .constructor_driver {
@@ -298,6 +300,7 @@ td:hover {
     }
   }
 
+  /* If larger device */
   @media screen and (min-width: 575px) {
     
     .constructor_driver {
