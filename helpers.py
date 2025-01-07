@@ -355,7 +355,7 @@ def driver_standings():
                 f"driver_standings: there's a {response.status_code} error with your request"
             )
         data = response.json()
-        return data['drivers_championship']
+        return data
 
     except (requests.RequestException, ValueError, KeyError, IndexError):
         print(

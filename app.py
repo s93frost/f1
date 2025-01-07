@@ -149,7 +149,12 @@ def drivers():
                     f'./static/driver_pics/{x["name"]}{x["surname"]}.jpg',
                 )
 
-    driver_standing = driver_standings()
+    driver_data = driver_standings()
+    driver_standing = driver_data['drivers_championship']
+
+    global CURRENT_SEASON
+    if not CURRENT_SEASON:
+        CURRENT_SEASON = driver_data["season"]
 
     return render_template(
         "drivers.html",
@@ -209,7 +214,12 @@ def constructors():
                 d = driver["driver"]["driverId"]
                 drivers_and_teams[team].append(d)
 
-    team_standing = team_standings()["constructors_championship"]
+    team_data = team_standings()
+    team_standing = team_data["constructors_championship"]
+
+    global CURRENT_SEASON
+    if not CURRENT_SEASON:
+        CURRENT_SEASON = team_data["season"]
 
     return render_template(
         "teams.html",
