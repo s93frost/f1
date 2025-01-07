@@ -142,10 +142,24 @@ body {
     padding: 5px;
 }
 
-.team_logo {
-    width: auto;
-    height: 80px;
-    padding: 5px;
+/* If mobile device */
+@media screen and (max-width: 575px) {
+    .team_logo {
+        width: 100%;
+        height: 100%;
+        padding: 5px;
+        margin-bottom: 3%;
+    }
+}
+    
+/* If larger device */
+@media screen and (min-width: 575px) {
+    .team_logo {
+        width: auto;
+        height: 100px;
+        padding: 5px;
+        margin-bottom: 3%;
+    }
 }
 
 .index_logo {
@@ -278,7 +292,6 @@ td:hover {
 
 /* If larger device */
 @media screen and (min-width: 575px) {
-    
     .constructor_footer {
         border-bottom-left-radius: 3px;
         border-bottom-right-radius: 3px;
@@ -292,18 +305,16 @@ td:hover {
     }
   }
 
-  /* If mobile device */
-  @media screen and (max-width: 575px) {
-    
+/* If mobile device */
+@media screen and (max-width: 575px) {
     .constructor_driver {
         padding-top: 4%;
     }
-  }
+}
 
-  /* If larger device */
-  @media screen and (min-width: 575px) {
-    
+/* If larger device */
+@media screen and (min-width: 575px) {
     .constructor_driver {
         padding-top: 1%;
     }
-  }
+}
