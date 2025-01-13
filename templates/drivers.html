@@ -21,12 +21,12 @@
 
         {% for x in driver_standing %}
             <div class="col mb-5">
-                <div id="curved-border" class="card">
+                <div id="glow-box" class="card">
                     <div class="constructor_header" id="{{ x.teamId.replace(' ','') }}">
                         <h5> {{ x.position }} </h5>
                         <h7> {{ x.points }} Pts </h7>
                     </div>
-                    <div class="card-body" id="team-card">
+                    <div class="card-body" id="driver-card">
                         <h5 class="card-title"> {{ x.driver.name }} </h5>
                         <h5 class="card-title"> {{ x.driver.surname }} </h5>
                         <h6 class="card-title"> No: {{ x.driver.number }} - Nationality: {{ x.driver.nationality }} </h6>

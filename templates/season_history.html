@@ -42,7 +42,7 @@
     </div>
 
     {% if season_data %}
-    <h1 class="">
+    <h1 style="color: white;">
         {{ season_data.championship.championshipName }}
     </h1>
 
@@ -52,7 +52,7 @@
 
     {% else %}
 
-        <h1> {{ season }} </h1>
+        <h1 style="color: white;"> {{ season }} </h1>
 
     {% endif %}
     
@@ -61,7 +61,7 @@
     <div class="row gx-4 gx-lg-4 row-cols-2 row-cols-md-3 row-cols-xl-3 justify-content-center">
         {% if team_standing_year == None %}
             <div class="col mb-5">
-                <div class="card bg-light mb-3">
+                <div id="glow-box" class="card bg-light mb-3">
                     <div id="purpleheader" class="card-header">
                         <h5> Constructor Champion </h5>
                     </div>
@@ -72,7 +72,7 @@
             </div>
         {% elif team_standing_year[0].points == None %}
             <div class="col mb-5">
-                <div class="card bg-light mb-3">
+                <div id="glow-box" class="card bg-light mb-3">
                     <div id="purpleheader" class="card-header">
                         <h5> Constructor Champion </h5>
                     </div>
@@ -83,7 +83,7 @@
             </div>
         {% elif team_standing_year[0].points == 0 %}
             <div class="col mb-5">
-                <div class="card bg-light mb-3">
+                <div id="glow-box" class="card bg-light mb-3">
                     <div id="purpleheader" class="card-header">
                         <h5> Constructor Champion </h5>
                     </div>
@@ -94,7 +94,7 @@
             </div>
         {% else %}
             <div class="col mb-5">
-                <div class="card bg-light mb-3">
+                <div id="glow-box" class="card bg-light mb-3">
                     <div id="{{ team_standing_year.0.teamId.replace(' ','') }}" class="card-header">
                         <h5> Constructor Champion </h5>
                     </div>
@@ -113,7 +113,7 @@
 
         {% if driver_standing_year == None %}
         <div class="col mb-5">
-            <div class="card bg-light mb-3">
+            <div id="glow-box" class="card bg-light mb-3">
                 <div id="season_histroy_driver_header" class="card-header">
                     <h5> Driver Champion </h5>
                 </div>
@@ -124,7 +124,7 @@
         </div>
         {% elif driver_standing_year[0].points == None %}
         <div class="col mb-5">
-            <div class="card bg-light mb-3">
+            <div id="glow-box" class="card bg-light mb-3">
                 <div id="season_histroy_driver_header" class="card-header">
                     <h5> Driver Champion </h5>
                 </div>
@@ -135,7 +135,7 @@
         </div>
         {% elif driver_standing_year[0].points == 0 %}
             <div class="col mb-5">
-                <div class="card bg-light mb-3">
+                <div id="glow-box" class="card bg-light mb-3">
                     <div id="season_histroy_driver_header" class="card-header">
                         <h5> Driver Champion </h5>
                     </div>
@@ -146,7 +146,7 @@
             </div>
         {% else %}
             <div class="col mb-5">
-                <div class="card bg-light mb-3">
+                <div id="glow-box" class="card bg-light mb-3">
                     <div id="{{ driver_standing_year.0.teamId.replace(' ','') }}" class="card-header">
                         <h5> Driver Champion </h5>
                     </div>

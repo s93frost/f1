@@ -58,8 +58,8 @@ h2 {
 }
 
 body {
-    background-color: #3A4345;
-    color: white;
+    background-color: #ffffff;
+    color: black;
 }
 
 #block {
@@ -93,8 +93,23 @@ body {
     justify-content: center
 }
 
-#team-card:hover {
+#driver-card {
     background-color: black;
+    color: white;
+}
+
+#driver-card:hover {
+    background-color: white;
+    color: black;
+}
+
+#team-card {
+    background-color: white;
+    color: black;
+}
+
+#team-card:hover {
+    background: linear-gradient(to right, #3c284b 0%, #68c2c3 100%);
     color: white;
 }
 
@@ -317,4 +332,13 @@ td:hover {
     .constructor_driver {
         padding-top: 1%;
     }
+}
+
+#background_gradient {
+    background: linear-gradient(to right, #3c284b 0%, #68c2c3 100%);
+}
+
+#glow-box {
+    box-shadow: 0 0 4px 3px #ffffff;
+    border-radius: 3px;
 }
