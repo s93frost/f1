@@ -42,7 +42,7 @@ def fastest(year, race):
     """API function for returning fastest driver in specified year and race"""
     try:
         response = requests.get(
-            f"https://f1connectapi.vercel.app/api/{year}/{race}",
+            f"https://f1api.dev/api/{year}/{race}",
             timeout=120
         )
         if response.status_code == 200:
@@ -60,7 +60,7 @@ def fastest(year, race):
 def seasons_history():
     """API function for returning seasons available in API"""
     try:
-        response = requests.get("https://f1connectapi.vercel.app/api/seasons?limit=100", timeout=120)
+        response = requests.get("https://f1api.dev/api/seasons?limit=100", timeout=120)
         if response.status_code == 200:
             print("seasons_history: successfully fetched the data")
         else:
@@ -81,7 +81,7 @@ def races(year):
     """API function for returning races of a specific season available in API"""
     try:
         response = requests.get(
-            f"https://f1connectapi.vercel.app/api/{year}?limit=100", timeout=120
+            f"https://f1api.dev/api/{year}?limit=100", timeout=120
         )
         if response.status_code == 200:
             print("races: successfully fetched the data")
@@ -103,7 +103,7 @@ def result_default():
     """API function for returning results of latest race"""
     try:
         response = requests.get(
-            "https://f1connectapi.vercel.app/api/current/last/race", 
+            "https://f1api.dev/api/current/last/race", 
             timeout=120
         )
         if response.status_code == 200:
@@ -126,7 +126,7 @@ def result(year, race):
     """API function for returning results from a specific race by season and race"""
     try:
         response = requests.get(
-            f"https://f1connectapi.vercel.app/api/{year}/{race}/race", 
+            f"https://f1api.dev/api/{year}/{race}/race", 
             timeout=120
         )
         if response.status_code == 200:
@@ -145,7 +145,7 @@ def qualifying_default():
     """API function for returning results of latest race"""
     try:
         response = requests.get(
-            "https://f1connectapi.vercel.app/api/current/last/qualy", 
+            "https://f1api.dev/api/current/last/qualy", 
             timeout=120
         )
         if response.status_code == 200:
@@ -168,7 +168,7 @@ def qualifying(year, race):
     """API function for returning results from a specific race by season and race"""
     try:
         response = requests.get(
-            f"https://f1connectapi.vercel.app/api/{year}/{race}/qualy", timeout=120
+            f"https://f1api.dev/api/{year}/{race}/qualy", timeout=120
         )
         if response.status_code == 200:
             print("qualifying: successfully fetched the data")
@@ -186,7 +186,7 @@ def previous_race():
     """API function for returning previous race before the most recent"""
     try:
         response = requests.get(
-            "https://f1connectapi.vercel.app/api/current/last", 
+            "https://f1api.dev/api/current/last", 
             timeout=120
         )
         if response.status_code == 200:
@@ -200,7 +200,7 @@ def previous_race():
             season = int((data)["season"])
             last_season = season - 1
             response2 = requests.get(
-                f"https://f1connectapi.vercel.app/api/{last_season}/24", 
+                f"https://f1api.dev/api/{last_season}/24", 
                 timeout=120
             )
             if response2.status_code == 200:
@@ -225,7 +225,7 @@ def next_race(number):
     (increments e.g 1 is next, 2 is the second race from now etc)"""
     try:
         response = requests.get(
-            "https://f1connectapi.vercel.app/api/current/last",
+            "https://f1api.dev/api/current/last",
             timeout=120
         )
         if response.status_code == 200:
@@ -244,7 +244,7 @@ def next_race(number):
 
         next_round = current_round + number  # takes the last race round and nth number argument
         response2 = requests.get(
-            f"https://f1connectapi.vercel.app/api/{current_year}/{next_round}", timeout=120
+            f"https://f1api.dev/api/{current_year}/{next_round}", timeout=120
         )
         if response2.status_code == 200:
             data1 = response2.json()
@@ -259,7 +259,7 @@ def teams_lookup():
     """API function for returning all teams in current season"""
     try:
         response = requests.get(
-            "https://f1connectapi.vercel.app/api/current/teams?limit=100", timeout=120
+            "https://f1api.dev/api/current/teams?limit=100", timeout=120
         )
         if response.status_code == 200:
             print("teams_lookup: successfully fetched the data")
@@ -279,7 +279,7 @@ def drivers_lookup():
     """API function for returning all drivers in current season"""
     try:
         response = requests.get(
-            "https://f1connectapi.vercel.app/api/current/drivers?limit=100", timeout=120
+            "https://f1api.dev/api/current/drivers?limit=100", timeout=120
         )
         if response.status_code == 200:
             print("drivers_lookup: successfully fetched the data")
@@ -300,7 +300,7 @@ def drivers_all_years():
     """API function for returning all drivers in all seasons"""
     try:
         response = requests.get(
-            "https://f1connectapi.vercel.app/api/drivers?limit=1000", timeout=120
+            "https://f1api.dev/api/drivers?limit=1000", timeout=120
         )
         if response.status_code == 200:
             print("drivers_all_years: successfully fetched the data")
@@ -322,7 +322,7 @@ def drivers_for_team(constructor):
     """API function for returning the drivers for a specific team"""
     try:
         response = requests.get(
-            f"https://f1connectapi.vercel.app/api/current/teams/{constructor}/drivers",
+            f"https://f1api.dev/api/current/teams/{constructor}/drivers",
             timeout=120
         )
         if response.status_code == 200:
@@ -345,7 +345,7 @@ def driver_standings():
     """API function for returning the drivers based on championship standing"""
     try:
         response = requests.get(
-            "https://f1connectapi.vercel.app/api/current/drivers-championship", 
+            "https://f1api.dev/api/current/drivers-championship", 
             timeout=120
         )
         if response.status_code == 200:
@@ -368,7 +368,7 @@ def driver_standings_year(year):
     """API function for returning the drivers based on championship standing"""
     try:
         response = requests.get(
-            f"https://f1connectapi.vercel.app/api/{year}/drivers-championship", 
+            f"https://f1api.dev/api/{year}/drivers-championship", 
             timeout=120
         )
         if response.status_code == 200:
@@ -391,7 +391,7 @@ def team_standings():
     """API function for returning the teams based on championship standing"""
     try:
         response = requests.get(
-            "https://f1connectapi.vercel.app/api/current/constructors-championship",
+            "https://f1api.dev/api/current/constructors-championship",
             timeout=120
         )
         if response.status_code == 200:
@@ -414,7 +414,7 @@ def team_standings_year(year):
     """API function for returning the teams based on championship standing"""
     try:
         response = requests.get(
-            f"https://f1connectapi.vercel.app/api/{year}/constructors-championship",
+            f"https://f1api.dev/api/{year}/constructors-championship",
             timeout=120
         )
         if response.status_code == 200:
