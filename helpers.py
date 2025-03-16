@@ -196,7 +196,7 @@ def previous_race():
 
         # if it's the first race of the season return the last race of last season
         previous_round = int((data)["round"])
-        if previous_round <= 1:
+        if previous_round <= 0:
             season = int((data)["season"])
             last_season = season - 1
             response2 = requests.get(
@@ -207,7 +207,7 @@ def previous_race():
                 data1 = response2.json()
                 return data1
 
-        else:  # if after first race of season, return previous race of season
+        else:  # if after first race of season, return previous race of this season
             if response.status_code == 200:
                 return data
             else:

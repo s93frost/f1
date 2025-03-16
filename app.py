@@ -1,6 +1,8 @@
 ''' This file is the application file serving the python logic for 
 different routes and templates used by the web app'''
 
+# to run development flask server -   python3 -m flask run
+
 import os
 import urllib.request
 
