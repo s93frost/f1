@@ -84,17 +84,17 @@ def index():
     # calling wiki picture api functions for each track if not already exists
     # checks if there is a last race returned by the API
     if last_race is not None and last_race is not False:
-        if not os.path.isfile(
-            f'./static/track_pics/{last_race["race"][0]["circuit"]["circuitName"]}.jpg'
-        ):
-            track_pic(last_race)
+        # if not os.path.isfile(
+            # f'./static/track_pics/{last_race["race"][0]["circuit"]["circuitName"]}.jpg'
+        # ):
+        track_pic(last_race)
 
     # checks if next race returned by the API (for end of season)
     if next_r is not None and next_r is not False:
-        if not os.path.isfile(
-            f'./static/track_pics/{next_r["race"][0]["circuit"]["circuitName"]}.jpg'
-        ):
-            track_pic(next_r)
+        # if not os.path.isfile(
+            # f'./static/track_pics/{next_r["race"][0]["circuit"]["circuitName"]}.jpg'
+        # ):
+        track_pic(next_r)
 
     # checks if next plus one race returned by the API (for end of season)
     if next_plus_one is not None and next_plus_one is not False:
