@@ -85,23 +85,23 @@ def index():
     # calling wiki picture api functions for each track if not already exists
     # checks if there is a last race returned by the API
     if last_race is not None and last_race is not False:
-        # if not os.path.isfile(
-            # f'./static/track_pics/{last_race["race"][0]["circuit"]["circuitName"]}.jpg'
-        # ):
-        track_pic(last_race)
+        last_safe = _safe_filename(last_race["race"][0]["circuit"]["circuitName"])
+        last_path = f'./static/track_pics/{last_safe}.jpg'
+        if not os.path.isfile(last_path):
+            track_pic(last_race)
 
     # checks if next race returned by the API (for end of season)
     if next_r is not None and next_r is not False:
-        # if not os.path.isfile(
-            # f'./static/track_pics/{next_r["race"][0]["circuit"]["circuitName"]}.jpg'
-        # ):
-        track_pic(next_r)
+        next_safe = _safe_filename(next_r["race"][0]["circuit"]["circuitName"])
+        next_path = f'./static/track_pics/{next_safe}.jpg'
+        if not os.path.isfile(next_path):
+            track_pic(next_r)
 
     # checks if next plus one race returned by the API (for end of season)
     if next_plus_one is not None and next_plus_one is not False:
-        if not os.path.isfile(
-            f'./static/track_pics/{next_plus_one["race"][0]["circuit"]["circuitName"]}.jpg'
-        ):
+        npo_safe = _safe_filename(next_plus_one["race"][0]["circuit"]["circuitName"])
+        npo_path = f'./static/track_pics/{npo_safe}.jpg'
+        if not os.path.isfile(npo_path):
             track_pic(next_plus_one)
 
     return render_template(
@@ -253,6 +253,7 @@ def results():
             all_drivers_dict[driver["driverId"]] = driver
 
     if request.method == "POST":
+        selected_data = None
         year = request.form.get("season")
         racename = request.form.get("racename")
 
@@ -295,6 +296,7 @@ def results():
 
         except (ValueError, KeyError, IndexError):
             result_data = None
+            selected_data = None
 
         try:
             fastest_lap = fastest(year, race_round)  # for getting fastest lap of selected race
@@ -345,7 +347,7 @@ def results():
             qualify_data = None
 
         try:
-            fastest_lap = fastest(data["season"], data["races"]["round"]) # get fastest lap of race
+            fastest_lap = fastest(data["season"], data["races"]["round"]) if data else None # get fastest lap of race
             # to check if dict contains any None values which would break results HTML
             if fastest_lap["fast_lap_driver_id"] is None:
                 #set entire dict to None so logic in results.html can skip
