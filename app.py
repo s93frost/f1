@@ -4,12 +4,13 @@ different routes and templates used by the web app'''
 # to run development flask server -   python3 -m flask run
 
 import os
-import urllib.request
 
 from flask import Flask, render_template, request
 from flask_session import Session
 
 from helpers import (
+    _safe_filename,
+    _download_image,
     drivers_lookup,
     teams_lookup,
     drivers_for_team,
@@ -134,9 +135,9 @@ def drivers():
 
     # to pull all pictures for drivers from their wikipedia url if file not already exists
     for x in drivers_dict.values():
-        if os.path.isfile(
-            f'./static/driver_pics/{x["name"]}{x["surname"]}.jpg'
-        ):
+        safe_name = _safe_filename(f'{x["name"]}{x["surname"]}')
+        out_path = f'./static/driver_pics/{safe_name}.jpg'
+        if os.path.isfile(out_path):
             continue
         else:
             wiki_url = x["url"]
@@ -146,10 +147,7 @@ def drivers():
             url = picture(wiki_search_title)
             # if API call returns data, retrieve the URL and save it to my workspace
             if url:
-                urllib.request.urlretrieve(
-                    url,
-                    f'./static/driver_pics/{x["name"]}{x["surname"]}.jpg',
-                )
+                _download_image(url, out_path)
 
     driver_data = driver_standings()
     driver_standing = driver_data['drivers_championship']
@@ -182,9 +180,9 @@ def constructors():
     global TEAM_PICS
     if TEAM_PICS is False:
         for x in teams_dict.values():
-            if os.path.isfile(
-                f'./static/team_pics/{x["teamId"]}.jpg'
-            ):
+            safe_team = _safe_filename(x["teamId"])
+            out_path = f'./static/team_pics/{safe_team}.jpg'
+            if os.path.isfile(out_path):
                 continue
             else:
                 wiki_url = x["url"]
@@ -193,10 +191,8 @@ def constructors():
                 # uses title for API function search tp pull picture
                 url = picture(wiki_search_title)
                 if url:
-                    urllib.request.urlretrieve(
-                        url,
-                        f'./static/team_pics/{x["teamId"]}.jpg',
-                    )
+                    _download_image(url, out_path)
+
         # sets variable as true after loop run so doesn't check again if already pulled
         TEAM_PICS = True
 
@@ -288,17 +284,15 @@ def results():
         try:
             selected_data = result(year, race_round)  # for getting result data for selected race
             result_data = selected_data["races"]
-            if not os.path.isfile(
-                f'./static/race_pics/{selected_data["races"]["raceName"]}.jpg',
-            ):
+            safe_race = _safe_filename(selected_data["races"]["raceName"])
+            out_path = f'./static/race_pics/{safe_race}.jpg'
+            if not os.path.isfile(out_path):
                 wiki_url = selected_data["races"]["url"] # to pull pic for race loaded on page
                 wiki_search_title = wiki_url.split("/")[-1] # splits out page title for API search
                 url = picture(wiki_search_title) # uses title for API search to pull picture
                 if url:
-                    urllib.request.urlretrieve(
-                        url,
-                        f'./static/race_pics/{selected_data["races"]["raceName"]}.jpg',
-                    )
+                    _download_image(url, out_path)
+
         except (ValueError, KeyError, IndexError):
             result_data = None
 
@@ -331,17 +325,14 @@ def results():
         try:
             data = result_default()
             result_data = data["races"]
-            if not os.path.isfile(
-                f'./static/race_pics/{data["races"]["raceName"]}.jpg',
-            ):
+            safe_race = _safe_filename(data["races"]["raceName"])
+            out_path = f'./static/race_pics/{safe_race}.jpg'
+            if not os.path.isfile(out_path):
                 wiki_url = data["races"]["url"] # to pull picture for specific race loaded on page
                 wiki_search_title = wiki_url.split("/")[-1] # splits out page title for API search
                 url = picture(wiki_search_title) # uses title for API search to pull picture
                 if url:
-                    urllib.request.urlretrieve(
-                        url,
-                        f'./static/race_pics/{data["races"]["raceName"]}.jpg',
-                    )
+                    _download_image(url, out_path)
         except (ValueError, KeyError, IndexError):
             data = None
             result_data = None

@@ -1,17 +1,19 @@
 ''' This file is storing all the function & API call functions for web app '''
-import urllib
+import os
+import re
 import requests
 
+# Reuse a single User-Agent for both API and image downloads
+HEADERS = {
+    "User-Agent": "SffBot/0.0 (https://github.com/code50/47425976.git; sfproject@cs50.org)"
+}
 
 def picture(wiki_search_title):
     """MediaWiki API for returning main page image of an article - 
     used in conjuction with URL received from API"""
     try:
         url = f"https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&prop=pageimages|pageterms&piprop=thumbnail&pithumbsize=600&titles={wiki_search_title}&redirects=&pilicense=any"
-        headers = {
-            "User-Agent": "SffBot/0.0 (https://github.com/code50/47425976.git; sfproject@cs50.org)"
-        }
-        response = requests.get(url, headers=headers, timeout=120)
+        response = requests.get(url, headers=HEADERS, timeout=120)
         if response.status_code == 200:
             print("picture: successfully fetched the data")
         else:
@@ -23,19 +25,58 @@ def picture(wiki_search_title):
         print(f"picture: there's a {response.status_code} error with your request")
         return None
 
+def _safe_filename(name: str) -> str:
+    '''Sanitize a string to be safe for use as a filename.'''
+    # Replace anything unsafe for filenames
+    return re.sub(r'[^A-Za-z0-9._-]+', '_', name).strip('_') or "image"
+
+def _download_image(url: str, out_path: str) -> bool:
+    """Stream download an image with headers; returns True on success."""
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    try:
+        with requests.get(url, headers=HEADERS, stream=True, timeout=30) as resp:
+            resp.raise_for_status()
+            with open(out_path, "wb") as f:
+                for chunk in resp.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
+        return True
+    except requests.RequestException as e:
+        print(f"[download] request failed: {e}")
+    except OSError as e:
+        print(f"[download] file write failed: {e}")
+    return False
 
 def track_pic(track):
     """function for getting track pictures using the picture function defined above"""
     wiki_url = track['race'][0]['url']
-    # splits out page title from wiki page for API search
     wiki_search_title = wiki_url.split("/")[-1]
-    # uses title for API function search tp pull picture
     url = picture(wiki_search_title)
-    if url:
-        urllib.request.urlretrieve(
-            url,
-            f'./static/track_pics/{track["race"][0]["circuit"]["circuitName"]}.jpg',
-        )
+    if not url:
+        print("track_pic: no image url returned")
+        return
+
+    # Ensure output directory exists and filename is safe
+    out_dir = os.path.join(".", "static", "track_pics")
+    os.makedirs(out_dir, exist_ok=True)
+    circuit_name = _safe_filename(track["race"][0]["circuit"]["circuitName"])
+    out_path = os.path.join(out_dir, f"{circuit_name}.jpg")
+
+    try:
+        # Download image with proper headers to avoid 403
+        with requests.get(url, headers=HEADERS, stream=True, timeout=120) as resp:
+            resp.raise_for_status()  # raises for 4xx/5xx
+            with open(out_path, "wb") as f:
+                for chunk in resp.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
+        print(f"track_pic: saved {out_path}")
+    except requests.HTTPError as e:
+        print(f"track_pic: HTTP error downloading image ({e.response.status_code})")
+    except requests.RequestException as e:
+        print(f"track_pic: request failed ({e})")
+    except OSError as e:
+        print(f"track_pic: file write failed ({e})")
 
 
 def fastest(year, race):
