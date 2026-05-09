@@ -57,7 +57,7 @@
                 {% if data.races.round %}
                 <h5 class="card-text"> <b>Round: </b>{{ data.races.round }} </h5>
                 {% endif %}
-                <img class="logo" src="/static/race_pics/{{data.races.raceName}}.jpg" alt="race pic"><br><br>
+                <img class="logo" src="/static/race_pics/{{data.races.raceName|replace(' ', '_')}}.jpg" alt="race pic"><br><br>
             {% elif qualify.races %}
                 <h5 class="card-text"> <b>Race:</b> {{ qualify.races.raceName }} </h5>
                 <h5 class="card-text"> <b>Location:</b> {{ qualify.races.circuit.circuitName }} - {{ qualify.races.circuit.city }} </h5>
@@ -67,7 +67,7 @@
                 <h5 class="card-text"> <b>Round: </b>{{ qualify.races.round }} </h5>
                 {% endif %}
                 {% if data.races %}
-                    <img class="logo" src="/static/race_pics/{{data.races.raceName}}.jpg" alt="race pic"><br><br>
+                    <img class="logo" src="/static/race_pics/{{data.races.raceName|replace(' ', '_')}}.jpg" alt="race pic"><br><br>
                 {% endif %}
             {% else %}
                 <h5 class="card-text"> <b>Race:</b> {{ raceName }} </h5>
@@ -100,7 +100,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td> {{ all_drivers_dict[fastest_lap.fast_lap_driver_id].name }} {{ all_drivers_dict[fastest_lap.fast_lap_driver_id].surname }} </td>
+                                <td> {{ all_drivers_dict[fastest_lap.fast_lap_driver_id].name }} {{ all_drivers_dict[fastest_lap.fast_lap_driver_id].surname }}  </td>
                                 <td> {{ fastest_lap.fast_lap }} </td>
                             </tr>
                         </tbody>

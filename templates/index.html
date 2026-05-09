@@ -42,8 +42,8 @@
                             <h5 class="card-text"> <b>Track:</b> {{ last_race.race.0.circuit.circuitName }} </h5>
                             <h5 class="card-text"> <b>Location:</b> {{ last_race.race.0.circuit.city }} - {{ last_race.race.0.circuit.country }} </h5>
                             <h5 class="card-text"> <b>Date:</b> {{ last_race.race.0.schedule.race.date }} </h5>
-                            <h5 class="card-text"> <b>Time:</b> {{ last_race.race.0.schedule.race.time }} </h5>           
-                            <img class="index_logo" src="/static/track_pics/{{last_race.race.0.circuit.circuitName}}.jpg" alt="image"><br><br>
+                            <h5 class="card-text"> <b>Time:</b> {{ last_race.race.0.schedule.race.time }} </h5>
+                            <img class="index_logo" src="/static/track_pics/{{last_race.race.0.circuit.circuitName|replace(' ', '_')}}.jpg" alt="image"><br><br>
                             <a href="{{last_race.race.0.circuit.url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> More circuit info from Wikipedia </a>
                         </div>
                         <div class="card-footer text-muted">
@@ -62,7 +62,7 @@
                             <h5 class="card-text"> <b>Location:</b> {{ next_r.race.0.circuit.city }} - {{ next_r.race.0.circuit.country }} </h5>
                             <h5 class="card-text"> <b>Date:</b> {{ next_r.race.0.schedule.race.date }} </h5>
                             <h5 class="card-text"> <b>Time:</b> {{ next_r.race.0.schedule.race.time }} </h5>
-                            <img class="index_logo" src="/static/track_pics/{{next_r.race.0.circuit.circuitName}}.jpg" alt="image"><br><br>
+                            <img class="index_logo" src="/static/track_pics/{{next_r.race.0.circuit.circuitName|replace(' ', '_')}}.jpg" alt="image"><br><br>
                             <a href="{{next_r.race.0.circuit.url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> More circuit info from Wikipedia </a>
                         </div>
                         <div class="card-footer text-muted">
@@ -85,7 +85,7 @@
                             <h5 class="card-text"> <b>Location:</b> {{ next_plus_one.race.0.circuit.city }} - {{ next_plus_one.race.0.circuit.country }} </h5>
                             <h5 class="card-text"> <b>Date:</b> {{ next_plus_one.race.0.schedule.race.date }} </h5>
                             <h5 class="card-text"> <b>Time:</b> {{ next_plus_one.race.0.schedule.race.time }} </h5>
-                            <img class="index_logo" src="/static/track_pics/{{next_plus_one.race.0.circuit.circuitName}}.jpg" alt="image"><br><br>
+                            <img class="index_logo" src="/static/track_pics/{{next_plus_one.race.0.circuit.circuitName|replace(' ', '_')}}.jpg" alt="image"><br><br>
                             <a href="{{next_plus_one.race.0.circuit.url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer"> More circuit info from Wikipedia </a>
                         </div>
                         <div class="card-footer text-muted">

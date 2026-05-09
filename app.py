@@ -4,6 +4,13 @@ different routes and templates used by the web app'''
 # to run development flask server -   python3 -m flask run
 
 import os
+import threading
+from datetime import datetime, time
+try:
+    from apscheduler.schedulers.background import BackgroundScheduler
+    APSCHEDULER_AVAILABLE = True
+except ImportError:
+    APSCHEDULER_AVAILABLE = False
 
 from flask import Flask, render_template, request
 from flask_session import Session
@@ -30,6 +37,7 @@ from helpers import (
     drivers_all_years,
     team_standings_year,
     driver_standings_year,
+    refresh_all_drivers,
 )
 
 from seasons import (
@@ -52,6 +60,7 @@ names_dict = {}
 TEAM_PICS = False
 CURRENT_SEASON = ""
 all_drivers_dict = {}
+DRIVERS_SEASON = None  # Track which season the drivers were fetched for
 # dict of seasons + race_name - not used anymore but kept to prompt line 234
 SEASONS_AND_NAMES = False
 # dict for storing seasons, race_names + rounds for javascript options on results post
@@ -247,10 +256,13 @@ def results():
         SEASONS_AND_NAMES = True
 
     # for dict of all drivers in all years
-    if not all_drivers_dict:
+    # only refresh if season changed (new season = new drivers may join)
+    global DRIVERS_SEASON
+    if not all_drivers_dict or DRIVERS_SEASON != CURRENT_SEASON:
         all_drivers = drivers_all_years()
         for driver in all_drivers:
             all_drivers_dict[driver["driverId"]] = driver
+        DRIVERS_SEASON = CURRENT_SEASON
 
     if request.method == "POST":
         selected_data = None
@@ -419,3 +431,39 @@ def season_history():
             driver_standing_year=driver_standing_year,
             season_data=season_data,
         )
+
+# --- Async prefetch at startup ---
+def async_prefetch_drivers():
+    def _refresh():
+        global DRIVERS_SEASON
+        DRIVERS_SEASON = refresh_all_drivers(
+            all_drivers_dict,
+            drivers_all_years,
+            previous_race,
+            DRIVERS_SEASON,
+            CURRENT_SEASON
+        )
+    t = threading.Thread(target=_refresh, daemon=True)
+    t.start()
+
+# --- Scheduled overnight refresh (3am) ---
+def schedule_overnight_refresh():
+    if not APSCHEDULER_AVAILABLE:
+        print("APScheduler not installed. Skipping scheduled refresh.")
+        return
+    scheduler = BackgroundScheduler()
+    def _refresh():
+        global DRIVERS_SEASON
+        DRIVERS_SEASON = refresh_all_drivers(
+            all_drivers_dict,
+            drivers_all_years,
+            previous_race,
+            DRIVERS_SEASON,
+            CURRENT_SEASON
+        )
+    scheduler.add_job(_refresh, 'cron', hour=3, minute=0)
+    scheduler.start()
+
+# --- Call async prefetch and schedule at startup ---
+async_prefetch_drivers()
+schedule_overnight_refresh()

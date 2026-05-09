@@ -48,8 +48,9 @@ def _download_image(url: str, out_path: str) -> bool:
     return False
 
 def track_pic(track):
-    """function for getting track pictures using the picture function defined above"""
-    wiki_url = track['race'][0]['url']
+    """function for getting track pictures using the circuit wiki page."""
+    circuit = track['race'][0].get('circuit', {})
+    wiki_url = circuit.get('url') or track['race'][0].get('url')
     wiki_search_title = wiki_url.split("/")[-1]
     url = picture(wiki_search_title)
     if not url:
@@ -59,7 +60,7 @@ def track_pic(track):
     # Ensure output directory exists and filename is safe
     out_dir = os.path.join(".", "static", "track_pics")
     os.makedirs(out_dir, exist_ok=True)
-    circuit_name = _safe_filename(track["race"][0]["circuit"]["circuitName"])
+    circuit_name = _safe_filename(circuit.get("circuitName", "track"))
     out_path = os.path.join(out_dir, f"{circuit_name}.jpg")
 
     try:
@@ -337,26 +338,53 @@ def drivers_lookup():
         )
         return None
 
-def drivers_all_years():
-    """API function for returning all drivers in all seasons"""
-    try:
-        response = requests.get(
-            "https://f1api.dev/api/drivers?limit=1000", timeout=120
-        )
-        if response.status_code == 200:
-            print("drivers_all_years: successfully fetched the data")
-        else:
-            print(
-                f"drivers_all_years: there's a {response.status_code} error with your request"
-            )
-        data = response.json()
-        return (data)["drivers"]
 
-    except (requests.RequestException, ValueError, KeyError, IndexError):
-        print(
-            f"drivers_all_years: there's a {response.status_code} error with your request"
-        )
-        return None
+def drivers_all_years():
+    """Fetch all drivers by walking pages until the API clearly stops giving data."""
+    all_drivers = []
+    limit = 100
+    offset = 0
+
+    while True:
+        try:
+            response = requests.get(
+                "https://f1connectapi.vercel.app/api/drivers",
+                params={"limit": limit, "offset": offset},
+                timeout=120,
+            )
+
+            # If we’ve gone past the end, API returns 404 → stop
+            if response.status_code == 404:
+                print(f"Reached end at offset {offset} (404)")
+                break
+
+            if response.status_code != 200:
+                print(f"HTTP {response.status_code} at offset {offset}")
+                break
+
+            data = response.json()
+            drivers = data.get("drivers", [])
+
+            # No drivers at all → stop
+            if not drivers:
+                print(f"No drivers returned at offset {offset}, stopping.")
+                break
+
+            all_drivers.extend(drivers)
+
+            # If we got fewer than limit, this is very likely the last page
+            if len(drivers) < limit:
+                print(f"Last page detected at offset {offset} (got {len(drivers)} < {limit})")
+                break
+
+            offset += limit
+
+        except (requests.RequestException, ValueError) as e:
+            print(f"Error at offset {offset}: {e}")
+            break
+
+    print(f"Total drivers fetched: {len(all_drivers)}")
+    return all_drivers
 
 
 def drivers_for_team(constructor):
@@ -469,3 +497,18 @@ def team_standings_year(year):
             f"team_standings_year: there's a {response.status_code} error with your request"
         )
         return None
+
+
+def refresh_all_drivers(all_drivers_dict, drivers_all_years_func, previous_race_func, DRIVERS_SEASON=None, current_season=None):
+    """Refresh all_drivers_dict and DRIVERS_SEASON, clearing dict first. Returns new DRIVERS_SEASON."""
+    all_drivers_dict.clear()
+    all_drivers = drivers_all_years_func()
+    for driver in all_drivers:
+        all_drivers_dict[driver["driverId"]] = driver
+    if current_season:
+        return current_season
+    else:
+        race = previous_race_func()
+        if race and "season" in race:
+            return race["season"]
+    return DRIVERS_SEASON
