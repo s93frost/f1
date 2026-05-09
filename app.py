@@ -4,7 +4,6 @@ different routes and templates used by the web app'''
 # to run development flask server -   python3 -m flask run
 
 import os
-import threading
 from datetime import datetime, time
 try:
     from apscheduler.schedulers.background import BackgroundScheduler
@@ -432,19 +431,6 @@ def season_history():
             season_data=season_data,
         )
 
-# --- Async prefetch at startup ---
-def async_prefetch_drivers():
-    def _refresh():
-        global DRIVERS_SEASON
-        DRIVERS_SEASON = refresh_all_drivers(
-            all_drivers_dict,
-            drivers_all_years,
-            previous_race,
-            DRIVERS_SEASON,
-            CURRENT_SEASON
-        )
-    t = threading.Thread(target=_refresh, daemon=True)
-    t.start()
 
 # --- Scheduled overnight refresh (3am) ---
 def schedule_overnight_refresh():
@@ -463,6 +449,3 @@ def schedule_overnight_refresh():
         )
     scheduler.add_job(_refresh, 'cron', hour=3, minute=0)
     scheduler.start()
-
-# --- Call async prefetch and schedule at startup ---
-async_prefetch_drivers()
