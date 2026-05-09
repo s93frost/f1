@@ -466,4 +466,3 @@ def schedule_overnight_refresh():
 
 # --- Call async prefetch and schedule at startup ---
 async_prefetch_drivers()
-schedule_overnight_refresh()
