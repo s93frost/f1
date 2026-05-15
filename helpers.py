@@ -2,11 +2,140 @@
 import os
 import re
 import requests
+import time
+from threading import Thread
+from functools import wraps
+from datetime import datetime, timedelta
 
 # Reuse a single User-Agent for both API and image downloads
 HEADERS = {
     "User-Agent": "SffBot/0.0 (https://github.com/code50/47425976.git; sfproject@cs50.org)"
 }
+
+# Simple in-memory cache for API responses (TTL in seconds)
+_cache = {}
+CACHE_TTL = 86400  # 24 hours (API updates weekly)
+
+def cache_api_response(ttl=CACHE_TTL):
+    """Decorator to cache API function results with TTL"""
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            cache_key = f"{func.__name__}:{str(args)}:{str(kwargs)}"
+            
+            if cache_key in _cache:
+                result, timestamp = _cache[cache_key]
+                if datetime.now() - timestamp < timedelta(seconds=ttl):
+                    print(f"{func.__name__}: returning cached result (age: {(datetime.now() - timestamp).seconds}s)")
+                    return result
+                else:
+                    del _cache[cache_key]
+            
+            result = func(*args, **kwargs)
+            _cache[cache_key] = (result, datetime.now())
+            return result
+        return wrapper
+    return decorator
+
+def download_images_async(image_list, download_func):
+    """Download multiple images in parallel using threads"""
+    threads = []
+    for image_data in image_list:
+        thread = Thread(target=download_func, args=(image_data,), daemon=True)
+        thread.start()
+        threads.append(thread)
+    
+    # Don't wait - let them run in background
+    return threads
+
+def clear_api_cache():
+    """Manually clear the API response cache (useful for forcing a refresh)"""
+    global _cache
+    _cache.clear()
+    print("API cache cleared")
+
+def _download_driver_image(driver_data):
+    """Background task for downloading a single driver image"""
+    safe_name = _safe_filename(f'{driver_data["name"]}{driver_data["surname"]}')
+    out_path = f'./static/driver_pics/{safe_name}.jpg'
+    if os.path.isfile(out_path):
+        return
+    
+    wiki_url = driver_data["url"]
+    wiki_search_title = wiki_url.split("/")[-1]
+    url = picture(wiki_search_title)
+    if url:
+        _download_image(url, out_path)
+
+def _download_team_image(team_data):
+    """Background task for downloading a single team image"""
+    safe_team = _safe_filename(team_data["teamId"])
+    out_path = f'./static/team_pics/{safe_team}.jpg'
+    if os.path.isfile(out_path):
+        return
+    
+    wiki_url = team_data["url"]
+    wiki_search_title = wiki_url.split("/")[-1]
+    url = picture(wiki_search_title)
+    if url:
+        _download_image(url, out_path)
+
+def _download_track_image(race_data):
+    """Background task for downloading a single track picture"""
+    circuit = race_data.get('circuit', {})
+    wiki_url = circuit.get('url') or race_data.get('url')
+    if not wiki_url:
+        return
+    
+    wiki_search_title = wiki_url.split("/")[-1]
+    url = picture(wiki_search_title)
+    if not url:
+        return
+
+    out_dir = os.path.join(".", "static", "track_pics")
+    os.makedirs(out_dir, exist_ok=True)
+    circuit_name = _safe_filename(circuit.get("circuitName", "track"))
+    out_path = os.path.join(out_dir, f"{circuit_name}.jpg")
+
+    try:
+        with requests.get(url, headers=HEADERS, stream=True, timeout=120) as resp:
+            resp.raise_for_status()
+            with open(out_path, "wb") as f:
+                for chunk in resp.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
+    except requests.RequestException:
+        pass
+    except OSError:
+        pass
+
+def _download_race_image(race_data):
+    """Background task for downloading a single race picture"""
+    wiki_url = race_data.get('url')
+    if not wiki_url:
+        return
+    
+    wiki_search_title = wiki_url.split("/")[-1]
+    url = picture(wiki_search_title)
+    if not url:
+        return
+
+    out_dir = os.path.join(".", "static", "race_pics")
+    os.makedirs(out_dir, exist_ok=True)
+    race_name = _safe_filename(race_data.get('raceName', 'race'))
+    out_path = os.path.join(out_dir, f"{race_name}.jpg")
+
+    try:
+        with requests.get(url, headers=HEADERS, stream=True, timeout=120) as resp:
+            resp.raise_for_status()
+            with open(out_path, "wb") as f:
+                for chunk in resp.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
+    except requests.RequestException:
+        pass
+    except OSError:
+        pass
 
 def picture(wiki_search_title):
     """MediaWiki API for returning main page image of an article - 
@@ -80,6 +209,7 @@ def track_pic(track):
         print(f"track_pic: file write failed ({e})")
 
 
+@cache_api_response(ttl=86400)  # Cache for 24 hours (API updates weekly)
 def fastest(year, race):
     """API function for returning fastest driver in specified year and race"""
     try:
@@ -99,6 +229,7 @@ def fastest(year, race):
         return None
 
 
+@cache_api_response(ttl=86400)  # Cache for 24 hours (API updates weekly)
 def seasons_history():
     """API function for returning seasons available in API"""
     try:
@@ -141,6 +272,7 @@ def races(year):
         return None
 
 
+@cache_api_response(ttl=86400)  # Cache for 24 hours (API updates weekly)
 def result_default():
     """API function for returning results of latest race"""
     try:
@@ -183,6 +315,7 @@ def result(year, race):
         return None
 
 
+@cache_api_response(ttl=86400)  # Cache for 24 hours (API updates weekly)
 def qualifying_default():
     """API function for returning results of latest race"""
     try:
@@ -224,6 +357,7 @@ def qualifying(year, race):
         return None
 
 
+@cache_api_response(ttl=86400)  # Cache for 24 hours (API updates weekly)
 def previous_race():
     """API function for returning previous race before the most recent"""
     try:
@@ -262,6 +396,7 @@ def previous_race():
         return None
 
 
+@cache_api_response(ttl=86400)  # Cache for 24 hours (API updates weekly)
 def next_race(number):
     """API function for returning nth next race from the last 
     (increments e.g 1 is next, 2 is the second race from now etc)"""
@@ -297,6 +432,7 @@ def next_race(number):
         return None
 
 
+@cache_api_response(ttl=86400)  # Cache for 24 hours (API updates weekly)
 def teams_lookup():
     """API function for returning all teams in current season"""
     try:
@@ -317,6 +453,7 @@ def teams_lookup():
         return None
 
 
+@cache_api_response(ttl=86400)  # Cache for 24 hours (API updates weekly)
 def drivers_lookup():
     """API function for returning all drivers in current season"""
     try:
@@ -387,6 +524,7 @@ def drivers_all_years():
     return all_drivers
 
 
+@cache_api_response(ttl=86400)  # Cache for 24 hours (API updates weekly)
 def drivers_for_team(constructor):
     """API function for returning the drivers for a specific team"""
     try:
@@ -410,6 +548,7 @@ def drivers_for_team(constructor):
         return None
 
 
+@cache_api_response(ttl=86400)  # Cache for 24 hours (API updates weekly)
 def driver_standings():
     """API function for returning the drivers based on championship standing"""
     try:
@@ -456,6 +595,7 @@ def driver_standings_year(year):
         return None
 
 
+@cache_api_response(ttl=86400)  # Cache for 24 hours (API updates weekly)
 def team_standings():
     """API function for returning the teams based on championship standing"""
     try:

@@ -5,6 +5,7 @@ different routes and templates used by the web app'''
 
 import os
 from datetime import datetime, time
+from threading import Thread
 try:
     from apscheduler.schedulers.background import BackgroundScheduler
     APSCHEDULER_AVAILABLE = True
@@ -17,6 +18,12 @@ from flask_session import Session
 from helpers import (
     _safe_filename,
     _download_image,
+    _download_driver_image,
+    _download_team_image,
+    _download_track_image,
+    _download_race_image,
+    download_images_async,
+    clear_api_cache,
     drivers_lookup,
     teams_lookup,
     drivers_for_team,
@@ -77,6 +84,13 @@ def after_request(response):
     return response
 
 
+@app.route("/admin/refresh-cache", methods=["POST"])
+def refresh_cache():
+    """Admin endpoint to manually refresh API cache (for testing or early updates)"""
+    clear_api_cache()
+    return {"status": "Cache cleared successfully"}
+
+
 @app.route("/", methods=["GET"])
 def index():
     """Show's main page including upcoming race info"""
@@ -93,24 +107,18 @@ def index():
     # calling wiki picture api functions for each track if not already exists
     # checks if there is a last race returned by the API
     if last_race is not None and last_race is not False:
-        last_safe = _safe_filename(last_race["race"][0]["circuit"]["circuitName"])
-        last_path = f'./static/track_pics/{last_safe}.jpg'
-        if not os.path.isfile(last_path):
-            track_pic(last_race)
+        # Start track pic download in background without blocking
+        Thread(target=_download_track_image, args=(last_race["race"][0],), daemon=True).start()
 
     # checks if next race returned by the API (for end of season)
     if next_r is not None and next_r is not False:
-        next_safe = _safe_filename(next_r["race"][0]["circuit"]["circuitName"])
-        next_path = f'./static/track_pics/{next_safe}.jpg'
-        if not os.path.isfile(next_path):
-            track_pic(next_r)
+        # Start track pic download in background without blocking
+        Thread(target=_download_track_image, args=(next_r["race"][0],), daemon=True).start()
 
     # checks if next plus one race returned by the API (for end of season)
     if next_plus_one is not None and next_plus_one is not False:
-        npo_safe = _safe_filename(next_plus_one["race"][0]["circuit"]["circuitName"])
-        npo_path = f'./static/track_pics/{npo_safe}.jpg'
-        if not os.path.isfile(npo_path):
-            track_pic(next_plus_one)
+        # Start track pic download in background without blocking
+        Thread(target=_download_track_image, args=(next_plus_one["race"][0],), daemon=True).start()
 
     return render_template(
         "index.html",
@@ -142,20 +150,8 @@ def drivers():
             drivers_dict[driver["driverId"]] = driver
 
     # to pull all pictures for drivers from their wikipedia url if file not already exists
-    for x in drivers_dict.values():
-        safe_name = _safe_filename(f'{x["name"]}{x["surname"]}')
-        out_path = f'./static/driver_pics/{safe_name}.jpg'
-        if os.path.isfile(out_path):
-            continue
-        else:
-            wiki_url = x["url"]
-            # splits out page title from wiki page for API search
-            wiki_search_title = wiki_url.split("/")[-1]
-            # uses title for API function search tp pull picture
-            url = picture(wiki_search_title)
-            # if API call returns data, retrieve the URL and save it to my workspace
-            if url:
-                _download_image(url, out_path)
+    # Start downloads in background without blocking page load
+    download_images_async(list(drivers_dict.values()), _download_driver_image)
 
     driver_data = driver_standings()
     driver_standing = driver_data['drivers_championship']
@@ -187,21 +183,9 @@ def constructors():
     # to pull all pictures for teams from their wikipedia url if file not already exists
     global TEAM_PICS
     if TEAM_PICS is False:
-        for x in teams_dict.values():
-            safe_team = _safe_filename(x["teamId"])
-            out_path = f'./static/team_pics/{safe_team}.jpg'
-            if os.path.isfile(out_path):
-                continue
-            else:
-                wiki_url = x["url"]
-                # splits out page title from wiki page for API search
-                wiki_search_title = wiki_url.split("/")[-1]
-                # uses title for API function search tp pull picture
-                url = picture(wiki_search_title)
-                if url:
-                    _download_image(url, out_path)
-
-        # sets variable as true after loop run so doesn't check again if already pulled
+        # Start downloads in background without blocking page load
+        download_images_async(list(teams_dict.values()), _download_team_image)
+        # sets variable as true after loop started so doesn't queue again if already started
         TEAM_PICS = True
 
     # for dict of all drivers in currrent year
@@ -296,14 +280,8 @@ def results():
         try:
             selected_data = result(year, race_round)  # for getting result data for selected race
             result_data = selected_data["races"]
-            safe_race = _safe_filename(selected_data["races"]["raceName"])
-            out_path = f'./static/race_pics/{safe_race}.jpg'
-            if not os.path.isfile(out_path):
-                wiki_url = selected_data["races"]["url"] # to pull pic for race loaded on page
-                wiki_search_title = wiki_url.split("/")[-1] # splits out page title for API search
-                url = picture(wiki_search_title) # uses title for API search to pull picture
-                if url:
-                    _download_image(url, out_path)
+            # Start race pic download in background without blocking
+            Thread(target=_download_race_image, args=(selected_data["races"],), daemon=True).start()
 
         except (ValueError, KeyError, IndexError):
             result_data = None
@@ -338,14 +316,8 @@ def results():
         try:
             data = result_default()
             result_data = data["races"]
-            safe_race = _safe_filename(data["races"]["raceName"])
-            out_path = f'./static/race_pics/{safe_race}.jpg'
-            if not os.path.isfile(out_path):
-                wiki_url = data["races"]["url"] # to pull picture for specific race loaded on page
-                wiki_search_title = wiki_url.split("/")[-1] # splits out page title for API search
-                url = picture(wiki_search_title) # uses title for API search to pull picture
-                if url:
-                    _download_image(url, out_path)
+            # Start race pic download in background without blocking
+            Thread(target=_download_race_image, args=(data["races"],), daemon=True).start()
         except (ValueError, KeyError, IndexError):
             data = None
             result_data = None
