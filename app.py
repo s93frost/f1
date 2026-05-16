@@ -6,6 +6,7 @@ different routes and templates used by the web app'''
 import os
 from datetime import datetime, time
 from threading import Thread
+from concurrent.futures import ThreadPoolExecutor, as_completed
 try:
     from apscheduler.schedulers.background import BackgroundScheduler
     APSCHEDULER_AVAILABLE = True
@@ -404,20 +405,68 @@ def season_history():
         )
 
 
+def _warm_season_year(year):
+    try:
+        races(year)
+        driver_standings_year(year)
+        team_standings_year(year)
+        return year, None
+    except Exception as e:
+        return year, e
+
+
+def perform_full_refresh():
+    """Refresh cached API data and warm commonly used endpoints."""
+    global DRIVERS_SEASON
+    clear_api_cache()
+
+    DRIVERS_SEASON = refresh_all_drivers(
+        all_drivers_dict,
+        drivers_all_years,
+        previous_race,
+        DRIVERS_SEASON,
+        CURRENT_SEASON
+    )
+
+    seasons = seasons_history() or []
+    result_default()
+    qualifying_default()
+    driver_standings()
+    team_standings()
+    drivers_lookup()
+    teams_lookup()
+
+    if seasons:
+        with ThreadPoolExecutor(max_workers=6) as executor:
+            futures = {
+                executor.submit(_warm_season_year, s.get("year")): s.get("year")
+                for s in seasons
+                if s.get("year")
+            }
+            for future in as_completed(futures):
+                year = futures[future]
+                try:
+                    _, error = future.result()
+                    if error:
+                        print(f"season warm failed for {year}: {error}")
+                except Exception as exc:
+                    print(f"season warm exception for {year}: {exc}")
+
+    return DRIVERS_SEASON
+
+
 # --- Scheduled overnight refresh (3am) ---
 def schedule_overnight_refresh():
     if not APSCHEDULER_AVAILABLE:
         print("APScheduler not installed. Skipping scheduled refresh.")
         return
     scheduler = BackgroundScheduler()
+
     def _refresh():
-        global DRIVERS_SEASON
-        DRIVERS_SEASON = refresh_all_drivers(
-            all_drivers_dict,
-            drivers_all_years,
-            previous_race,
-            DRIVERS_SEASON,
-            CURRENT_SEASON
-        )
+        try:
+            perform_full_refresh()
+        except Exception as e:
+            print(f"overnight refresh error: {e}")
+
     scheduler.add_job(_refresh, 'cron', hour=3, minute=0)
     scheduler.start()

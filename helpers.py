@@ -250,6 +250,7 @@ def seasons_history():
         return None
 
 
+@cache_api_response(ttl=86400)  # Cache for 24 hours (API updates weekly)
 def races(year):
     """API function for returning races of a specific season available in API"""
     try:
@@ -572,6 +573,7 @@ def driver_standings():
         return None
 
 
+@cache_api_response(ttl=86400)  # Cache for 24 hours (API updates weekly)
 def driver_standings_year(year):
     """API function for returning the drivers based on championship standing"""
     try:
@@ -619,6 +621,7 @@ def team_standings():
         return None
 
 
+@cache_api_response(ttl=86400)  # Cache for 24 hours (API updates weekly)
 def team_standings_year(year):
     """API function for returning the teams based on championship standing"""
     try:
